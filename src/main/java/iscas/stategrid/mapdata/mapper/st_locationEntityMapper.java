@@ -16,7 +16,7 @@ public interface st_locationEntityMapper {
     int insert(st_locationEntity record);
     int insertSelective(st_locationEntity record);
     st_locationEntity selectByPrimaryKey(Integer id);
-    List<st_locationEntity> selectAll();
+    //List<st_locationEntity> selectAll();
     int updateByPrimaryKeySelective(st_locationEntity record);
     int updateByPrimaryKey(st_locationEntity record);
 
