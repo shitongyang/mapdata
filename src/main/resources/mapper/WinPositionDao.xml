@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="iscas.stategrid.mapdata.mapper.WinPositionDao">
+
+  <!--获得全国风电机组的位置-->
+  <select id="getWinPosition" resultType="java.util.Map">
+    SELECT  `name`,lng,lat FROM windfarm
+  </select>
+
+
+  <!--地区某风电机组下各个风电机的位置与连接情况-->
+  <select id="getWinLine" resultType="java.util.Map">
+        SELECT `from`,`to` FROM win_line
+  </select>
+
+  <select id="getWinLocation" resultType="java.util.Map">
+        SELECT lng,lat FROM wind where id=#{id}
+  </select>
+
+
+</mapper>
