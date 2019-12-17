@@ -2,7 +2,7 @@ package iscas.stategrid.mapdata.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import iscas.stategrid.mapdata.Service.dc_lineService;
+import iscas.stategrid.mapdata.service.dc_lineService;
 import iscas.stategrid.mapdata.util.RedisClient;
 import iscas.stategrid.mapdata.util.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/WS")
 @Component
 public class MapTopoWebSocket {
-    private static iscas.stategrid.mapdata.Service.dc_lineService dc_lineService;
+    private static iscas.stategrid.mapdata.service.dc_lineService dc_lineService;
     /**
      * session 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
@@ -73,9 +73,7 @@ public class MapTopoWebSocket {
      */
     @OnMessage
     public  void onMessage(String message) {
-        System.out.println("传过来的参数是"+message);
-       // sendMessage(JSON.toJSONString(result));
-
+        System.out.println("WS的socket传过来的参数是"+message);
         if(str=="") {
             str = message;
             a= new MyThread1(message);
@@ -152,7 +150,6 @@ public class MapTopoWebSocket {
         public void run()
         {
             while(isRun) {
-                //sendMessage(JSON.toJSONString(name));
                 List<Map<String, Object>> topo_Line_info = dc_lineService.getTopoLine(name);
                 List<Map<String, Object>> topo_Location_info = dc_lineService.getTopoLocation(name);
                 Map<String, List<Map<String, Object>>> result = resultMap(topo_Line_info, topo_Location_info, name);
@@ -186,8 +183,9 @@ public class MapTopoWebSocket {
                     if("2".equals(isStatic)){
                         Thread.sleep(1000);
                     }
-                    else
+                    else {
                         Thread.sleep(5000);
+                    }
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

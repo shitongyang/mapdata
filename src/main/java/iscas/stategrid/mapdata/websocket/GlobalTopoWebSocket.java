@@ -1,7 +1,7 @@
 package iscas.stategrid.mapdata.websocket;
 
 import com.alibaba.fastjson.JSON;
-import iscas.stategrid.mapdata.Service.dc_lineService;
+import iscas.stategrid.mapdata.service.dc_lineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

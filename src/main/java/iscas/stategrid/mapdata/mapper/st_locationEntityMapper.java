@@ -68,4 +68,7 @@ public interface st_locationEntityMapper {
 
     //根据城市获取区
     List<String> selectCountyByCity(String city);
+
+    //根据区域获取省份
+    List<String> selectProvinceByArea(String area);
 }

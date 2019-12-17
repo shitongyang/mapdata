@@ -34,5 +34,8 @@ public class StringToJson {
         System.out.println(array[0]=="2");
         System.out.println(new Date());
 
+        double d = (int) (Math.random() * (60 - 40));
+        System.out.println(0-d);
+
     }
 }

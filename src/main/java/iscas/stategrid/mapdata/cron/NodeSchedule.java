@@ -2,7 +2,7 @@ package iscas.stategrid.mapdata.cron;
 
 
 import com.alibaba.fastjson.JSON;
-import iscas.stategrid.mapdata.Service.dc_lineService;
+import iscas.stategrid.mapdata.service.dc_lineService;
 import iscas.stategrid.mapdata.mapper.st_locationEntityMapper;
 import iscas.stategrid.mapdata.util.RedisClient;
 import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
@@ -12,7 +12,6 @@ import org.springframework.scheduling.TriggerContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
-import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

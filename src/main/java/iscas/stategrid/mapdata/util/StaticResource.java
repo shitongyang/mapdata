@@ -337,8 +337,8 @@ public class StaticResource {
     public static List<Map<String,Object>> errorResult(String area){
 
         HashMap<String,Object> map=new HashMap<>();
-        map.put("描述:","参数错误");
-        map.put("你输入的参数是:",area);
+        map.put("描述","参数错误");
+        map.put("你输入的参数是",area);
         List<Map<String,Object>> list=new ArrayList<>();
         list.add(map);
         return list;

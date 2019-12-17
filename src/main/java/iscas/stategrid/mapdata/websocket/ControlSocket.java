@@ -1,14 +1,13 @@
 package iscas.stategrid.mapdata.websocket;
 
 import com.alibaba.fastjson.JSON;
-import iscas.stategrid.mapdata.Service.KongJService;
+import iscas.stategrid.mapdata.service.KongJService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -63,7 +62,8 @@ public class ControlSocket {
      */
     @OnMessage
     public void onMessage(String message) {
-        List<Map<String,String>> area_info = jcInfoService.getAreaInfo();
+        System.out.println("KJ的socket传来的参数是"+message);
+        Map<String,Object> area_info = jcInfoService.getKongJInfo(message);
         sendMessage(JSON.toJSONString(area_info));
     }
 
@@ -96,5 +96,34 @@ public class ControlSocket {
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    public  class MyThread1 extends Thread
+    {
+
+        public String name;
+        boolean isStop=true;
+        public void terminate(){
+            this.isStop=false;
+        }
+
+        public boolean isRun=true;
+        MyThread1 (String name){
+            this.name=name;
+        }
+        @Override
+        public void run()
+        {
+            while(isRun) {
+                Map<String,Object> area_info = jcInfoService.getKongJInfo(name);
+                sendMessage(JSON.toJSONString(area_info));
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 }

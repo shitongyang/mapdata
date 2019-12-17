@@ -213,4 +213,9 @@ select a.english from province a where a.province=#{province}  </select>
   <select id="selectCountyByCity" parameterType="java.lang.String" resultType="java.lang.String">
     select distinct(a.county) from city a where a.city=#{city} and length(county)>0
     </select>
+
+  <!--根据区域获取省份-->
+  <select id="selectProvinceByArea" parameterType="java.lang.String" resultType="java.lang.String">
+select distinct(a.province) from st_location a where a.area=#{area}    </select>
+
 </mapper>
