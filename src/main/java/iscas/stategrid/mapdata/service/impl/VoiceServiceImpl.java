@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +28,7 @@ public class VoiceServiceImpl implements VoiceService {
     private st_locationEntityMapper stLocationEntityMapper;
     @Autowired
     private KongJService jcInfoService;
+    private List<Map<String,String>> info;
     @Override
     public String queryCommand(String commandType, String area) {
         String message = "查询成功";
@@ -79,9 +81,9 @@ public class VoiceServiceImpl implements VoiceService {
     @Override
     public String operate(String commandType, String parameter) {
         String url = "http://192.168.101.80:8100/tts?access_token=speech&language=zh&domain=1&voice_name=静静&text=";
-        String message = "sucess";
+        String message = "fail";
         Map<String, Object> voice_map = new HashMap<>();
-        if (commandType.equals("01")){
+        if ("01".equals(commandType)){
             String level="";
             if("全国".equals(parameter)){
                 level="全国";
@@ -100,13 +102,43 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("type","1");
             voice_map.put("level",level);
             voice_map.put("area",parameter);
-            voice_map.put("voice",url+"已为你切换到"+parameter);
+            voice_map.put("voice",url+"已为您切换到"+parameter);
+            message = "success";
         }
-        else if(commandType.equals("02")){
+        else if("02".equals(commandType)){
             voice_map.put("type","1");
             voice_map.put("area","返回上一级");
             voice_map.put("level","");
-            voice_map.put("voice",url+"返回上一级");
+            voice_map.put("voice",url+"返回成功");
+            message = "success";
+        }else if("03".equals(commandType)){
+            voice_map.put("type","3");
+            voice_map.put("name",parameter);
+            voice_map.put("voice",url+"已为您切换到"+parameter+"界面");
+        }else if("04".equals(commandType)){
+            voice_map.put("type","3");
+            voice_map.put("name",parameter);
+            voice_map.put("voice",url+"已为您切换到"+parameter+"场景");
+        }else if("05".equals(commandType)){
+            voice_map.put("type","2");
+            //传输故障信息
+            Map<String,String> error_map = new HashMap<>();
+            error_map.put("from","");
+            error_map.put("to","");
+            error_map.put("message","");
+            voice_map.put("voice",url+"故障设置成功");
+        }else if("06".equals(commandType)){
+            voice_map.put("type","2");
+            //传输调控后裕度信息
+            voice_map.put("voice",url+"调控策略已注入");
+        }else if("0A".equals(commandType)){
+            voice_map.put("type","3");
+            voice_map.put("name","模型测辨");
+            voice_map.put("voice",url+"已为您切换到模型测辨界面");
+        }else if("0B".equals(commandType)){
+            voice_map.put("type","3");
+            voice_map.put("name","平台监控");
+            voice_map.put("voice",url+"已为您切换到大数据平台监控界面");
         }
         voiceSocket.sendMessage(JSON.toJSONString(voice_map));
         return message;

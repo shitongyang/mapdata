@@ -16,12 +16,14 @@ public class VoiceController {
     private VoiceService voiceService;
     @RequestMapping(value = "querycommand",method = RequestMethod.POST)
     public String queryCommand(@RequestParam String commandtype, @RequestParam(defaultValue = "null") String area){
-        String message = voiceService.queryCommand(commandtype,area);
+        //String message = voiceService.queryCommand(commandtype,area);
+        String message = "commandtype:"+commandtype+" area:"+area;
         return message;
     }
     @RequestMapping(value = "operate",method = RequestMethod.POST)
     public String operate(@RequestParam String operationtype, @RequestParam(defaultValue = "null") String parameter){
-        String message = voiceService.operate(operationtype,parameter);
+        //String message = voiceService.operate(operationtype,parameter);
+        String message = "operationtype:"+operationtype+" parameter:"+parameter;
         return message;
     }
 }
