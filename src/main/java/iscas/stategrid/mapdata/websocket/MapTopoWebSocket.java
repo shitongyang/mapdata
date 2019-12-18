@@ -29,7 +29,10 @@ public class MapTopoWebSocket {
      */
     private Session session;
     public static String str="";
+    //保存前端传过来的值
     public static MyThread1 a=null;
+
+
     /**
      * webSocketSet concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象
      */
@@ -37,23 +40,14 @@ public class MapTopoWebSocket {
 
     @Autowired
     public void setdc_lineService(dc_lineService dc_lineService) {
+
         MapTopoWebSocket.dc_lineService = dc_lineService;
     }
-    /**
-     * 功能描述: websocket 连接建立成功后进行调用
-     *
-     * @param:
-     * @return:
-     * @auther: lvxianjin
-     * @date: 2019/10/22 19:29
-     */
     @OnOpen
     public void onOpen(Session session) {
-        //List<Map<String,Object>> area_info = dc_lineService.getAreaTopo("");
         this.session = session;
         webSocketSet.add(this);
         System.out.println("区域Socket连接成功");
-        //sendMessage(JSON.toJSONString(area_info));
     }
 
     /**
@@ -63,7 +57,9 @@ public class MapTopoWebSocket {
     public void onClose() {
         webSocketSet.remove(this);
         System.out.println("区域Socket连接关闭");
-        a.stop();
+        if(a!=null){
+          a.stop();
+        }
         RedisClient client = new RedisClient();
         client.setValue("id","全国,1");
     }
@@ -88,51 +84,6 @@ public class MapTopoWebSocket {
         }
         //RedisClient client = new RedisClient();
         //client.setValue("id",message);
-
-       // List<Map<String, Object>> topo_Line_info = dc_lineService.getTopoLine(message);
-       // List<Map<String, Object>> topo_Location_info = dc_lineService.getTopoLocation(message);
-        //Map<String, List<Map<String, Object>>> result = resultMap(topo_Line_info, topo_Location_info, message);
-          /*
-        final long timeInterval = 1000;
-        Runnable runnable = new Runnable() {
-            public void run() {
-                if(str==message) {
-                    while (true) {
-                        // ------- code for task to run
-                        System.out.println("Hello !!");
-                        // ------- ends here
-                        try {
-                            Thread.sleep(timeInterval);
-                            List<Map<String, Object>> topo_Line_info = dc_lineService.getTopoLine(message);
-                            List<Map<String, Object>> topo_Location_info = dc_lineService.getTopoLocation(message);
-                            Map<String, List<Map<String, Object>>> result = resultMap(topo_Line_info, topo_Location_info, message);
-                            System.out.println("11111111111" + message);
-                            sendMessage(JSON.toJSONString(result));
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                else {
-                    str = message;
-                    Thread.interrupted();
-                }
-            }
-        };
-        Thread thread = new Thread(runnable);
-        thread.start();
-       */
-
-        /*if(str=="")
-            str=message;
-        MyThread1 my =new MyThread1();
-        Thread thread1 = new Thread(my);
-        my.setName(result.toString());
-        thread1.start();
-        if(str!=message) {
-            thread1.interrupt();
-            str=message;
-        }*/
     }
     public  class MyThread1 extends Thread
     {
@@ -158,6 +109,7 @@ public class MapTopoWebSocket {
                 JSONObject object=JSONObject.parseObject(name);
                 String quyu=object.getString("area");
                 String isStatic=object.getString("JZStatus");
+
                 if(quyu.equals("全国")&&isStatic.equals("2")){
                     Map<String,Object> error_map = new HashMap<>();
                     error_map.put("Flng", "106.23849358740017");

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
@@ -25,14 +26,15 @@ import java.util.*;
 
 @Component
 @EnableScheduling
-public class WindSchedule implements SchedulingConfigurer {
+public class WindSchedule {
+        //implements SchedulingConfigurer {
     @Autowired
     private WinPositionService winPositionService;
     @Autowired
     private WinPositionSocket winPositionSocket;
     private static final String DEFAULT_CRON = "0/2 * * * * ?";
     private String cron = DEFAULT_CRON;
-    @Override
+   /* @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.addTriggerTask(new Runnable() {
             @Override
@@ -56,5 +58,14 @@ public class WindSchedule implements SchedulingConfigurer {
         BigDecimal p1 = new BigDecimal(String.valueOf(m1));
         BigDecimal p2 = new BigDecimal(String.valueOf(m2));
         return p1.add(p2).doubleValue();
-    }
+    }*/
+
+
+
+//   @Scheduled(fixedRate=10)
+//   public void doThing(){
+//       List<Map<String,String>> DYW_info = winPositionService.getDYWInfo();
+//       winPositionSocket.sendMessage(JSON.toJSONString(DYW_info));
+//   }
+
 }

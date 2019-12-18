@@ -22,6 +22,7 @@ public class dc_lineImpl implements dc_lineService {
     public List<Map<String, Object>> getTopoLine(String area) {
         JSONObject object=JSONObject.parseObject(area);
             String quyu=object.getString("area");
+            System.out.println(quyu);
             if ("全国".equals(quyu)) {
                 return locationEntitymapper.selectGlobalTopo();
             } else if (StaticResource.AREA_Set.contains(quyu)) {
@@ -62,10 +63,11 @@ public class dc_lineImpl implements dc_lineService {
     public List<Map<String, Object>> getTopoLocation(String area) {
         JSONObject object=JSONObject.parseObject(area);
             String quyu=object.getString("area");
+            System.out.println(quyu);
             String isStatic=object.getString("JZStatus");
             if("全国".equals(quyu)){
                 List<Map<String, Object>> list=locationEntitymapper.selectGlobalTopoLocation("");
-                if(isStatic.equals("2")){
+                if("2".equals(isStatic)){
                     //暂态
                     for(int i=0;i<list.size();i++){
                         list.get(i).put("height",(int)(Math.random()*7)+30);
@@ -81,7 +83,7 @@ public class dc_lineImpl implements dc_lineService {
                 if(list==null||list.size()<10) {
                     list=locationEntitymapper.selectAreaTopoLocation(quyu,"500kv");
                 }
-                if(isStatic.equals("2")){
+                if("2".equals(isStatic)){
                     //暂态
                     for(int i=0;i<list.size();i++){
                         list.get(i).put("height",(int)(Math.random()*7)+30);
@@ -98,7 +100,7 @@ public class dc_lineImpl implements dc_lineService {
                 if(list==null||list.size()==0){
                     list=locationEntitymapper.selectProvinceTopoLocation(quyu,"220kv");
                 }
-                if(isStatic.equals("2")){
+                if("2".equals(isStatic)){
                     //暂态
                     for(int i=0;i<list.size();i++){
                         list.get(i).put("height",(int)(Math.random()*7)+30);
@@ -108,8 +110,9 @@ public class dc_lineImpl implements dc_lineService {
             }
             if (StaticResource.CITY_SET.contains(quyu)) {
                 String level=object.getString("vlevel");
+                level=level+"kv";
                 List<Map<String, Object>> list = locationEntitymapper.selectCityTopoLocation(quyu,level);
-                if(isStatic.equals("2")){
+                if("2".equals(isStatic)){
                     //暂态
                     for(int i=0;i<list.size();i++){
                         list.get(i).put("height",(int)(Math.random()*7)+30);

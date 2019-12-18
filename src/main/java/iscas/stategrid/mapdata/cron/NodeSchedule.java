@@ -57,8 +57,9 @@ public class NodeSchedule implements SchedulingConfigurer {
                         setCron("0/5 * * * * ?");
                     }
                 }
-                else
+                else {
                     setCron("0/1 * * * * ?");
+                }
 
 
                 List<Map<String,Object>> data1 = Service.getTopoLocation(message);

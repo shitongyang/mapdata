@@ -25,9 +25,8 @@ public class WinPositionImpl implements WinPositionService {
 
     //地区某风电机组下各个风电机的位置与连接情况
     @Override
-    public Map<String,List<Map<String,String>>> getWinLine() {
-        Map<String,List<Map<String,String>>> info_map = new HashMap<>();
-        List<Map<String,String>> data1 = new ArrayList<>();
+    public List<Map<String, String>> getWinLine() {
+        List<Map<String,String>> list=new ArrayList<>();
         List<Map<String,String>> info=winPositionDao.getWinLine();
         for (int i=0;i<info.size();i++){
             Map<String,String> map=new HashMap<>();
@@ -37,18 +36,18 @@ public class WinPositionImpl implements WinPositionService {
             map.put("Flat",winPositionDao.getWinLocation(from).get("lat"));
             map.put("Tlng",winPositionDao.getWinLocation(to).get("lng"));
             map.put("Tlat",winPositionDao.getWinLocation(to).get("lat"));
-            data1.add(map);
+            list.add(map);
         }
-        info_map.put("data1",data1);
-        info_map.put("data2",winPositionDao.getWind());
-        return info_map;
+        return list;
     }
-    List<String> content1=getContent("C:\\Users\\lvxianjin\\Desktop\\model\\1.txt");
-    List<String> content2=getContent("C:\\Users\\lvxianjin\\Desktop\\model\\2.txt");
-    List<String> content3=getContent("C:\\Users\\lvxianjin\\Desktop\\model\\3.txt");
+
+
 //    List<String> content1=getContent("/opt/data/1.txt");
 //    List<String> content2=getContent("/opt/data/2.txt");
 //    List<String> content3=getContent("/opt/data/3.txt");
+    List<String> content1=getContent("C:\\Users\\user\\Desktop\\data\\1.txt");
+    List<String> content2=getContent("C:\\Users\\user\\Desktop\\data\\2.txt");
+    List<String> content3=getContent("C:\\Users\\user\\Desktop\\data\\3.txt");
     public List<String> getContent(String filePath){
         List<String> content=new ArrayList<>();
         BufferedReader br=null;

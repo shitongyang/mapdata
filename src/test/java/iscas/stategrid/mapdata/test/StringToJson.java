@@ -2,6 +2,7 @@ package iscas.stategrid.mapdata.test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.sql.SQLOutput;
 import java.util.Date;

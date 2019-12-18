@@ -22,9 +22,7 @@ public class HelloController {
 
     @RequestMapping(value="/getLocation",method = RequestMethod.GET)
     public String getLocation(@RequestParam("location") String location){
-        List<Map<String,Object>> map=dc_lineService.getLocation(location);
-        String str = JSON.toJSONString(map);
-        return str;
+        return JSON.toJSONString(dc_lineService.getLocation(location));
     }
 
 
