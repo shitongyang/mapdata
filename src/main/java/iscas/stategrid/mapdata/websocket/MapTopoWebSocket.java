@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/WS")
 @Component
 public class MapTopoWebSocket {
+    private static String status=null;
     private static iscas.stategrid.mapdata.service.dc_lineService dc_lineService;
     /**
      * session 与某个客户端的连接会话，需要通过它来给客户端发送数据

@@ -23,6 +23,7 @@ public class VoiceController {
     @RequestMapping(value = "operate",method = RequestMethod.POST)
     public String operate(@RequestParam String operationtype, @RequestParam(defaultValue = "null") String parameter){
         //String message = voiceService.operate(operationtype,parameter);
+        voiceService.operate(operationtype,parameter);
         String message = "operationtype:"+operationtype+" parameter:"+parameter;
         return message;
     }

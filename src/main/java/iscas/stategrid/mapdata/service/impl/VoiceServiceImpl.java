@@ -1,10 +1,13 @@
 package iscas.stategrid.mapdata.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPObject;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.VoiceService;
 import iscas.stategrid.mapdata.mapper.st_locationEntityMapper;
 import iscas.stategrid.mapdata.util.StaticResource;
+import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
 import iscas.stategrid.mapdata.websocket.VoiceSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,10 +28,13 @@ public class VoiceServiceImpl implements VoiceService {
     @Autowired
     private VoiceSocket voiceSocket;
     @Autowired
+    private MapTopoWebSocket mapTopoWebSocket;
+    @Autowired
     private st_locationEntityMapper stLocationEntityMapper;
     @Autowired
     private KongJService jcInfoService;
     private List<Map<String,String>> info;
+    private boolean isControl = false;
     @Override
     public String queryCommand(String commandType, String area) {
         String message = "查询成功";
@@ -120,6 +126,12 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("name",parameter);
             voice_map.put("voice",url+"已为您切换到"+parameter+"场景");
         }else if("05".equals(commandType)){
+            Map<String,String> message_map = new HashMap<>();
+            message_map.put("area","华中");
+            message_map.put("JZStatus","2");
+            message_map.put("vlevel","");
+            String message_json = JSON.toJSONString(message_map);
+            mapTopoWebSocket.sendMessage(message_json);
             voice_map.put("type","2");
             //传输故障信息
             Map<String,String> error_map = new HashMap<>();
@@ -130,6 +142,7 @@ public class VoiceServiceImpl implements VoiceService {
         }else if("06".equals(commandType)){
             voice_map.put("type","2");
             //传输调控后裕度信息
+            isControl = true;
             voice_map.put("voice",url+"调控策略已注入");
         }else if("0A".equals(commandType)){
             voice_map.put("type","3");
@@ -142,5 +155,13 @@ public class VoiceServiceImpl implements VoiceService {
         }
         voiceSocket.sendMessage(JSON.toJSONString(voice_map));
         return message;
+    }
+    @Override
+    public boolean getControl(){
+        return isControl;
+    }
+    @Override
+    public List<Map<String,String>> getInfo(){
+        return info;
     }
 }

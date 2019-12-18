@@ -16,6 +16,9 @@
   <select id="getWinLocation" resultType="java.util.Map">
         SELECT lng,lat FROM wind where id=#{id}
   </select>
+    <select id="getWind" resultType="java.util.Map">
+        SELECT lng,lat,id FROM wind
+    </select>
 
 
 </mapper>

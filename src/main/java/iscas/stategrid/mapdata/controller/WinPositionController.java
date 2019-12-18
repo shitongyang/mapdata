@@ -22,8 +22,8 @@ public class WinPositionController {
 
     //地区某风电机组下各个风电机的位置与连接情况
     @RequestMapping(value = "getWL.json",method = RequestMethod.GET)
-    public List<Map<String,String>> getWL(){
-        List<Map<String,String>> message_WL = winPositionService.getWinLine();
+    public Map<String,List<Map<String,String>>> getWL(){
+        Map<String,List<Map<String,String>>> message_WL = winPositionService.getWinLine();
         return message_WL;
     }
 
