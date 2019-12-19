@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="iscas.stategrid.mapdata.mapper.VoiceDao">
+
+
+    <select id="getErrorInfo" resultType="java.util.Map">
+        SELECT * FROM error WHERE id = #{id}
+    </select>
+    <select id="getLineInfo" resultType="java.util.Map">
+        SELECT DISTINCT `from`,`to` FROM line_info WHERE `from` = #{name} or `to` = #{name}
+    </select>
+    <select id="getLocationByName" resultType="java.util.Map">
+        SELECT lng,lat FROM st_location WHERE st_name = #{name}
+    </select>
+</mapper>

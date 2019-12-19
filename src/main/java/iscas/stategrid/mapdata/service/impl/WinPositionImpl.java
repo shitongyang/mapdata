@@ -93,7 +93,8 @@ public class WinPositionImpl implements WinPositionService {
             info.remove(0);
         }
         count=count+1;
-        if (count>790){
+        if (count==800){
+            info = new ArrayList<>();
             count=0;
         }
         return info;

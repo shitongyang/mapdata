@@ -1,8 +1,7 @@
 package iscas.stategrid.mapdata.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPObject;
+import iscas.stategrid.mapdata.mapper.VoiceDao;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.VoiceService;
 import iscas.stategrid.mapdata.mapper.st_locationEntityMapper;
@@ -12,6 +11,7 @@ import iscas.stategrid.mapdata.websocket.VoiceSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +27,8 @@ public class VoiceServiceImpl implements VoiceService {
 
     @Autowired
     private VoiceSocket voiceSocket;
+    @Autowired
+    private VoiceDao voiceDao;
     @Autowired
     private MapTopoWebSocket mapTopoWebSocket;
     @Autowired
@@ -126,19 +128,55 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("name",parameter);
             voice_map.put("voice",url+"已为您切换到"+parameter+"场景");
         }else if("05".equals(commandType)){
-            Map<String,String> message_map = new HashMap<>();
+            Map<String,Object> message_map = new HashMap<>();
+            Map<String,String> error_point = new HashMap<>();
+            List<Map<String,String>> error_line = new ArrayList<>();
+            List<Map<String,String>> from_list = voiceDao.getLineInfo(voiceDao.getErrorInfo(parameter).get("from"));
+            List<Map<String,String>> to_list = voiceDao.getLineInfo(voiceDao.getErrorInfo(parameter).get("to"));
+            for (int i = 0; i <from_list.size(); i++) {
+                Map<String,String> line_map = new HashMap<>();
+                line_map.put("Flng",voiceDao.getLocationByName(from_list.get(i).get("from")).get("lng"));
+                line_map.put("Flat",voiceDao.getLocationByName(from_list.get(i).get("from")).get("lat"));
+                line_map.put("Tlng",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lng"));
+                line_map.put("Tlat",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lat"));
+                error_line.add(line_map);
+            }
+            for (int i = 0; i <to_list.size(); i++) {
+                Map<String,String> line_map = new HashMap<>();
+                line_map.put("Flng",voiceDao.getLocationByName(from_list.get(i).get("from")).get("lng"));
+                line_map.put("Flat",voiceDao.getLocationByName(from_list.get(i).get("from")).get("lat"));
+                line_map.put("Tlng",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lng"));
+                line_map.put("Tlat",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lat"));
+                error_line.add(line_map);
+            }
             message_map.put("area","华中");
             message_map.put("JZStatus","2");
             message_map.put("vlevel","");
+            error_point.put("Flng",voiceDao.getErrorInfo(parameter).get("Flng"));
+            error_point.put("Flat",voiceDao.getErrorInfo(parameter).get("Flat"));
+            error_point.put("Tlng",voiceDao.getErrorInfo(parameter).get("Tlng"));
+            error_point.put("Tlat",voiceDao.getErrorInfo(parameter).get("Tlat"));
+            error_point.put("percent",voiceDao.getErrorInfo(parameter).get("percent"));
+            message_map.put("error_point",error_point);
+            message_map.put("error_line",error_line);
             String message_json = JSON.toJSONString(message_map);
             mapTopoWebSocket.sendMessage(message_json);
             voice_map.put("type","2");
-            //传输故障信息
-            Map<String,String> error_map = new HashMap<>();
-            error_map.put("from","");
-            error_map.put("to","");
-            error_map.put("message","");
-            voice_map.put("voice",url+"故障设置成功");
+            voice_map.put("voice",url+"第"+parameter+"类故障设置成功");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            try {
+                Thread.sleep(1500);
+                voice_map.put("type","2");
+                voice_map.put("voice","华中地区在此故障下稳定的概率是");
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Map<String,String> ZC_map = new HashMap<>();
+            ZC_map.put("area","华中");
+            ZC_map.put("JZStatus","1");
+            ZC_map.put("vlevel","");
+            mapTopoWebSocket.sendMessage(JSON.toJSONString(ZC_map));
         }else if("06".equals(commandType)){
             voice_map.put("type","2");
             //传输调控后裕度信息
