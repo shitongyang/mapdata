@@ -111,6 +111,7 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("level",level);
             voice_map.put("area",parameter);
             voice_map.put("voice",url+"已为您切换到"+parameter);
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             message = "success";
         }
         else if("02".equals(commandType)){
@@ -118,21 +119,26 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("area","返回上一级");
             voice_map.put("level","");
             voice_map.put("voice",url+"返回成功");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             message = "success";
         }else if("03".equals(commandType)){
             voice_map.put("type","3");
             voice_map.put("name",parameter);
             voice_map.put("voice",url+"已为您切换到"+parameter+"界面");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            message = "success";
         }else if("04".equals(commandType)){
             voice_map.put("type","3");
             voice_map.put("name",parameter);
             voice_map.put("voice",url+"已为您切换到"+parameter+"场景");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            message = "success";
         }else if("05".equals(commandType)){
             Map<String,Object> message_map = new HashMap<>();
             Map<String,String> error_point = new HashMap<>();
             List<Map<String,String>> error_line = new ArrayList<>();
             List<Map<String,String>> from_list = voiceDao.getLineInfo(voiceDao.getErrorInfo(parameter).get("from"));
-            List<Map<String,String>> to_list = voiceDao.getLineInfo(voiceDao.getErrorInfo(parameter).get("to"));
+            List<Map<String,String>> to_list =   voiceDao.getLineInfo(voiceDao.getErrorInfo(parameter).get("to"));
             for (int i = 0; i <from_list.size(); i++) {
                 Map<String,String> line_map = new HashMap<>();
                 line_map.put("Flng",voiceDao.getLocationByName(from_list.get(i).get("from")).get("lng"));
@@ -143,10 +149,10 @@ public class VoiceServiceImpl implements VoiceService {
             }
             for (int i = 0; i <to_list.size(); i++) {
                 Map<String,String> line_map = new HashMap<>();
-                line_map.put("Flng",voiceDao.getLocationByName(from_list.get(i).get("from")).get("lng"));
-                line_map.put("Flat",voiceDao.getLocationByName(from_list.get(i).get("from")).get("lat"));
-                line_map.put("Tlng",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lng"));
-                line_map.put("Tlat",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lat"));
+                line_map.put("Flng",voiceDao.getLocationByName(to_list.get(i).get("from")).get("lng"));
+                line_map.put("Flat",voiceDao.getLocationByName(to_list.get(i).get("from")).get("lat"));
+                line_map.put("Tlng",voiceDao.getLocationByName(to_list.get(i).get("to")).get("lng"));
+                line_map.put("Tlat",voiceDao.getLocationByName(to_list.get(i).get("to")).get("lat"));
                 error_line.add(line_map);
             }
             message_map.put("area","华中");
@@ -160,14 +166,15 @@ public class VoiceServiceImpl implements VoiceService {
             message_map.put("error_point",error_point);
             message_map.put("error_line",error_line);
             String message_json = JSON.toJSONString(message_map);
-            mapTopoWebSocket.sendMessage(message_json);
+            mapTopoWebSocket.onMessage(message_json);
             voice_map.put("type","2");
             voice_map.put("voice",url+"第"+parameter+"类故障设置成功");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             try {
                 Thread.sleep(1500);
                 voice_map.put("type","2");
-                voice_map.put("voice","华中地区在此故障下稳定的概率是");
+                voice_map.put("voice",url+"华中地区在此故障下稳定的概率是");
+                voiceSocket.sendMessage(JSON.toJSONString(voice_map));
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -176,22 +183,25 @@ public class VoiceServiceImpl implements VoiceService {
             ZC_map.put("area","华中");
             ZC_map.put("JZStatus","1");
             ZC_map.put("vlevel","");
-            mapTopoWebSocket.sendMessage(JSON.toJSONString(ZC_map));
+            mapTopoWebSocket.onMessage(JSON.toJSONString(ZC_map));
+            message = "success";
         }else if("06".equals(commandType)){
             voice_map.put("type","2");
             //传输调控后裕度信息
             isControl = true;
             voice_map.put("voice",url+"调控策略已注入");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
         }else if("0A".equals(commandType)){
             voice_map.put("type","3");
             voice_map.put("name","模型测辨");
             voice_map.put("voice",url+"已为您切换到模型测辨界面");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
         }else if("0B".equals(commandType)){
             voice_map.put("type","3");
             voice_map.put("name","平台监控");
             voice_map.put("voice",url+"已为您切换到大数据平台监控界面");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
         }
-        voiceSocket.sendMessage(JSON.toJSONString(voice_map));
         return message;
     }
     @Override
