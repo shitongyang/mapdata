@@ -7,7 +7,7 @@
         SELECT * FROM error WHERE id = #{id}
     </select>
     <select id="getLineInfo" resultType="java.util.Map">
-        SELECT DISTINCT `from`,`to` FROM line_info WHERE `from` = #{name} or `to` = #{name}
+       SELECT a.`from`,a.`to` FROM (SELECT DISTINCT `from`,`to` FROM line_info WHERE `from` = #{name} or `to` = #{name})as a  WHERE `from` in (SELECT st_name FROM st_location WHERE area = '华中')  AND a.`to` in (SELECT st_name FROM st_location WHERE area = '华中')LIMIT 3
     </select>
     <select id="getLocationByName" resultType="java.util.Map">
         SELECT lng,lat FROM st_location WHERE st_name = #{name}
