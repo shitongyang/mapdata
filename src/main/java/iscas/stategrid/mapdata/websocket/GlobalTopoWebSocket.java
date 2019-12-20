@@ -51,37 +51,9 @@ public class GlobalTopoWebSocket {
     @OnOpen
     public void onOpen(Session session) {
         //获取拓扑结构
-       // List<Map<String,Object>> topo_info = dc_lineService.getTopo();
-        //获得站点
-        //List<Map<String,Object>> Location_info = dc_lineService.getLocation("global");
-
-       // Map<String,List<Map<String,Object>>> result=new HashMap<>();
-        //result.put("topo",topo_info);
-        //result.put("location",Location_info);
-
         this.session = session;
         webSocketSet.add(this);
         System.out.println("区域Socket连接成功");
-       /* final long timeInterval = 1000;
-        Runnable runnable = new Runnable() {
-            public void run() {
-                while (true) {
-                    // ------- code for task to run
-                    System.out.println("Hello !!");
-                    // ------- ends here
-                    try {
-                        Thread.sleep(timeInterval);
-                        sendMessage(JSON.toJSONString(result));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        Thread thread = new Thread(runnable);
-        thread.start();
-        */
-
     }
 
     /**

@@ -1,8 +1,7 @@
 package iscas.stategrid.mapdata.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import iscas.stategrid.mapdata.service.KongJService;
-import iscas.stategrid.mapdata.mapper.st_locationEntityMapper;
-import iscas.stategrid.mapdata.util.RedisClient;
+import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.util.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,13 +55,9 @@ public class KongJServiceImpl implements KongJService {
     * 六大地区振荡频率和阻尼比信息
      */
     List<Map<String, String>> area_info = new ArrayList<>();
-    /*
-    * 安全概率
-    * */
-    Map<String, String> Secure_map = new HashMap<>();
 
     @Autowired
-    private st_locationEntityMapper stLocationEntityMapper;
+    private LocationMapper stLocationEntityMapper;
 
     @Override
     public List<String> getErrorInfo() {
@@ -96,15 +91,15 @@ public class KongJServiceImpl implements KongJService {
     public String getIndexByFlag(String flag) {
         String index = "";
         if(flag.equals("1")){
-            index = "百分之"+String.valueOf(index_1);
+            index = "百分之"+index_1;
         }else if(flag.equals("2")){
-            index = "百分之"+String.valueOf(index_3);
+            index = "百分之"+index_3;
         }else if(flag.equals("3")){
-            index = "百分之"+String.valueOf(index_2);
+            index = "百分之"+index_2;
         }else if(flag.equals("4")){
-            index = "百分之"+String.valueOf(index_4);
+            index = "百分之"+index_4;
         }else {
-            index = "百分之"+String.valueOf(index_5);
+            index = "百分之"+index_5;
         }
         return index;
     }
@@ -173,11 +168,6 @@ public class KongJServiceImpl implements KongJService {
             police = police+map.get("station_name")+map.get("FDJ_name")+"调控量"+map.get("Police")+";";
         }
         return police;
-    }
-
-    @Override
-    public Map<String, String> getSecure() {
-        return Secure_map;
     }
 
     @Override
@@ -363,17 +353,23 @@ public class KongJServiceImpl implements KongJService {
         //模拟态->区域
         //获取预想故障下区域信息
         List<Map<String,Object>> list = new ArrayList<>();
-        Map<String,Object> map = new HashMap<>();
+
+        List<String> locationList=new ArrayList<>();
+        locationList.add("国调峡葛III线");
+        locationList.add("华中 南香I回线");
+        locationList.add("团林换流站");
+        List<String> typeList=new ArrayList<>();
+        typeList.add("A相单相永久短路故障");
+        typeList.add("A相单相永久短路故障");
+        typeList.add("AB相两相永久短路故障");
         //"故障位置、故障类型、稳定状态"
-        map.put("location","模式1");
-        map.put("type","0.1");
-        map.put("status","0.6");
-        list.add(map);
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("location","模式1");
-        map1.put("type","0.1");
-        map1.put("status","0.6");
-        list.add(map1);
+        for(int i=0;i<locationList.size();i++){
+            Map<String,Object> map = new HashMap<>();
+            map.put("location",locationList.get(i));
+            map.put("type",typeList.get(i));
+            map.put("status","");
+            list.add(map);
+        }
         return list;
     }
     public List<Map<String,Object>> getTiaoKongBoRuo()

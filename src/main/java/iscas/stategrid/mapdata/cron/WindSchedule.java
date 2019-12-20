@@ -62,10 +62,10 @@ public class WindSchedule {
 
 
 
-//   @Scheduled(fixedRate=10)
-//   public void doThing(){
-//       List<Map<String,String>> DYW_info = winPositionService.getDYWInfo();
-//       winPositionSocket.sendMessage(JSON.toJSONString(DYW_info));
-//   }
+   @Scheduled(fixedRate=200)
+   public void doThing(){
+       List<Map<String,String>> DYW_info = winPositionService.getDYWInfo();
+       winPositionSocket.sendMessage(JSON.toJSONString(DYW_info));
+   }
 
 }

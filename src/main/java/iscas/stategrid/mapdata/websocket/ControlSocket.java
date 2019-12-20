@@ -19,18 +19,22 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/KJ")
 @Controller
 public class ControlSocket {
-    private static KongJService jcInfoService;
+    private static KongJService KongJService;
     /**
      * session 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
     private Session session;
+
+    private  String str="";
+    //保存前端传过来的值
+    private static MyThread1 a=null;
     /**
      * webSocketSet concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象
      */
     private static CopyOnWriteArraySet<ControlSocket> webSocketSet = new CopyOnWriteArraySet();
     @Autowired
     public void setJCInfoService(KongJService jcInfoService) {
-        ControlSocket.jcInfoService = jcInfoService;
+        ControlSocket.KongJService = jcInfoService;
     }
     /**
      * 功能描述: websocket 连接建立成功后进行调用
@@ -53,6 +57,8 @@ public class ControlSocket {
     @OnClose
     public void onClose() {
         webSocketSet.remove(this);
+        if(a!=null)
+            a.stop();
         System.out.println("区域Socket连接关闭");
     }
     /**
@@ -63,8 +69,17 @@ public class ControlSocket {
     @OnMessage
     public void onMessage(String message) {
         System.out.println("KJ的socket传来的参数是"+message);
-        Map<String,Object> area_info = jcInfoService.getKongJInfo(message);
-        sendMessage(JSON.toJSONString(area_info));
+        if(str=="") {
+            str = message;
+            a= new MyThread1(message);
+            a.start();
+        }
+        if(str!=message){
+            a.stop();
+            a= new MyThread1(message);
+            a.start();
+            str=message;
+        }
     }
 
     /**
@@ -115,10 +130,10 @@ public class ControlSocket {
         public void run()
         {
             while(isRun) {
-                Map<String,Object> area_info = jcInfoService.getKongJInfo(name);
+                Map<String,Object> area_info = KongJService.getKongJInfo(name);
                 sendMessage(JSON.toJSONString(area_info));
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(60000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

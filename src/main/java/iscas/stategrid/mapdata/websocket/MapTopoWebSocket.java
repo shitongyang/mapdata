@@ -22,16 +22,15 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/WS")
 @Component
 public class MapTopoWebSocket {
-    private static String status=null;
-    private static iscas.stategrid.mapdata.service.dc_lineService dc_lineService;
+    private static dc_lineService dc_lineService;
     /**
      * session 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
     private Session session;
-    public static String str="";
-    //保存前端传过来的值
-    public static MyThread1 a=null;
 
+    private  String str="";
+    //保存前端传过来的值
+    private static MyThread1 a=null;
 
     /**
      * webSocketSet concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象
@@ -46,6 +45,7 @@ public class MapTopoWebSocket {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
+        System.out.println(session.getId());
         webSocketSet.add(this);
         System.out.println("区域Socket连接成功");
     }
@@ -104,12 +104,13 @@ public class MapTopoWebSocket {
             while(isRun) {
                 List<Map<String, Object>> topo_Line_info = dc_lineService.getTopoLine(name);
                 List<Map<String, Object>> topo_Location_info = dc_lineService.getTopoLocation(name);
-                Map<String, List<Map<String, Object>>> result = resultMap(topo_Line_info, topo_Location_info, name);
-                System.out.println("在run方法中的输出:" + name);
+                Map<String,Object> result = resultMap(topo_Line_info, topo_Location_info, name);
+                System.out.println("在run方法中进来的参数是:" + name);
                 JSONObject object=JSONObject.parseObject(name);
                 String quyu=object.getString("area");
                 String isStatic=object.getString("JZStatus");
-
+                result.put("hide","false");
+                //地图是否隐藏，false的话不隐藏，ture的话隐藏
                 if(quyu.equals("全国")&&isStatic.equals("2")){
                     Map<String,Object> error_map = new HashMap<>();
                     error_map.put("Flng", "106.23849358740017");
@@ -125,11 +126,33 @@ public class MapTopoWebSocket {
                     error_line.put("Flat", "38.492460055509596");
                     error_line.put("Tlng", "117.33611995705515");
                     error_line.put("Tlat", "23.849355608251166");
-                    //error_map.remove("percent");
                     List<Map<String,Object>> badLineList=new ArrayList();
                     badLineList.add(error_line);
                     result.put("badPoint",badPointList);
                     result.put("badLine",badLineList);
+                }
+                else if(StaticResource.AREA_Set.contains(quyu)&&"2".equals(isStatic)){
+
+                    System.out.println("已经进入区域暂态");
+                    System.out.println(result);
+                    result.remove("area_tpLine");
+                    result.remove("area_tpLocation");
+                    List<Map<String,Object>> nullList1=new ArrayList<>();
+                    List<Map<String,Object>> nullList2=new ArrayList<>();
+                    result.put("area_tpLine",nullList1);
+                    result.put("area_tpLocation",nullList2);
+                    //把拓扑的站点和线路清空
+                    String error_point=object.getString("error_point");
+                    Map mapTypes = JSON.parseObject(error_point);
+                    List<Map<String,Object>> badPointList=new ArrayList();
+                    badPointList.add(mapTypes);
+
+                    String error_line=object.getString("error_line");
+                    List listTypes=JSONObject.parseArray(error_line);
+                    List<Map<String,Object>> badLineList=listTypes;
+                    result.put("badPoint",badPointList);
+                    result.put("badLine",badLineList);
+                    result.put("hide","true");
                 }
                 sendMessage(JSON.toJSONString(result));
                 try {
@@ -160,9 +183,9 @@ public class MapTopoWebSocket {
      * 实现服务器主动推送
      */
     public  void  sendMessage(String message) {
-        for (MapTopoWebSocket socketServer : webSocketSet) {
+       for (MapTopoWebSocket socketServer : webSocketSet) {
             try {
-                //synchronized (session) {
+               // synchronized (session) {
                 socketServer.session.getBasicRemote().sendText(message);
                 //}
             } catch (IOException e) {
@@ -171,13 +194,13 @@ public class MapTopoWebSocket {
         }
     }
 
-    public Map<String,List<Map<String,Object>>> resultMap(List<Map<String,Object>> list1,List<Map<String,Object>> list2,String message){
+    public Map<String,Object> resultMap(List<Map<String,Object>> list1,List<Map<String,Object>> list2,String message){
 
          String line="";
          String location="";
         JSONObject object=JSONObject.parseObject(message);
         String area=object.getString("area");
-        Map<String,List<Map<String,Object>>> map=new HashMap<>();
+        Map<String,Object> map=new HashMap<>();
         if("全国".equals(area)){
             line="china_tpLine";
             location="china_tpLocation";

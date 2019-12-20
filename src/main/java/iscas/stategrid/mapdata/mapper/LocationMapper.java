@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Mapper
 @Component
-public interface st_locationEntityMapper {
+public interface LocationMapper {
     long countByExample(st_locationEntityExample example);
     int deleteByPrimaryKey(Integer id);
     int insert(st_locationEntity record);

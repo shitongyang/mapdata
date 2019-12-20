@@ -79,16 +79,6 @@ public interface KongJService {
   * @date: 2019/10/28 8:21
   */
  String getPoliceInfo();
- /**
-  *
-  * 功能描述: 获取安全概率
-  *
-  * @param:
-  * @return:
-  * @auther: lvxianjin
-  * @date: 2019/10/28 14:11
-  */
-Map<String,String> getSecure();
 /**
  *
  * 功能描述: 获取关键节点指标信息

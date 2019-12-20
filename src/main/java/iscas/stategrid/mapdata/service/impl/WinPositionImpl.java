@@ -15,6 +15,7 @@ public class WinPositionImpl implements WinPositionService {
     @Autowired
     private WinPositionDao winPositionDao;
     private int count=0;
+    private List<Map<String,String>> info=new ArrayList<>();
 
     //全国风电机组的位置
     @Override
@@ -76,7 +77,6 @@ public class WinPositionImpl implements WinPositionService {
     //区域展示电压、有功功率、无功对比折线
     @Override
     public List<Map<String, String>> getDYWInfo() {
-        List<Map<String,String>> info=new ArrayList<>();
         Map<String,String> map=new HashMap<>();
         map.put("time",content1.get(count).trim().split(",")[0]);
         map.put("WF_v",content1.get(count).trim().split(",")[1]);

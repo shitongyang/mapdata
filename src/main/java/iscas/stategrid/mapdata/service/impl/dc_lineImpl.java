@@ -2,7 +2,7 @@ package iscas.stategrid.mapdata.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import iscas.stategrid.mapdata.service.dc_lineService;
-import iscas.stategrid.mapdata.mapper.st_locationEntityMapper;
+import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.util.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import static iscas.stategrid.mapdata.util.StaticResource.errorResult;
 public class dc_lineImpl implements dc_lineService {
 
     @Autowired
-    private st_locationEntityMapper locationEntitymapper;
+    private LocationMapper locationEntitymapper;
 
 
     //获得拓扑线路
@@ -124,8 +124,6 @@ public class dc_lineImpl implements dc_lineService {
                 return errorResult(area);
             }
     }
-
-
     //获取场站
     @Override
     public List<Map<String, Object>> getLocation(String area) {

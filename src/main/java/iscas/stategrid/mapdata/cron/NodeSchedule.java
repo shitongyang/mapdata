@@ -3,7 +3,7 @@ package iscas.stategrid.mapdata.cron;
 
 import com.alibaba.fastjson.JSON;
 import iscas.stategrid.mapdata.service.dc_lineService;
-import iscas.stategrid.mapdata.mapper.st_locationEntityMapper;
+import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.util.RedisClient;
 import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class NodeSchedule implements SchedulingConfigurer {
     @Autowired
     private MapTopoWebSocket Socket;
     @Autowired
-    private st_locationEntityMapper Dao;
+    private LocationMapper Dao;
     private static final String DEFAULT_CRON = "0/5 * * * * ?";
     private String cron = DEFAULT_CRON;
 
@@ -42,9 +42,7 @@ public class NodeSchedule implements SchedulingConfigurer {
             @Override
             public void run() {
                 RedisClient client = new RedisClient();
-
                 String message = client.getValue("id");
-
                 String array[]=message.split(",");
                 String isStatic="";
                 if(array.length>=2){
@@ -65,8 +63,7 @@ public class NodeSchedule implements SchedulingConfigurer {
                 List<Map<String,Object>> data1 = Service.getTopoLocation(message);
 
                 List<Map<String,Object>> data3 = Service.getTopoLine(message);
-                Map<String,List<Map<String,Object>>> data_map=Socket.resultMap(data3,data1,message);
-                //Map<String,Object> error_map = new HashMap<>();
+                Map<String,Object> data_map=Socket.resultMap(data3,data1,message);
                 if(array[0].equals("全国")&&isStatic.equals("2")){
                     Map<String,Object> error_map = new HashMap<>();
                     error_map.put("Flng", "106.23849358740017");
@@ -82,13 +79,11 @@ public class NodeSchedule implements SchedulingConfigurer {
                    error_line.put("Flat", "38.492460055509596");
                    error_line.put("Tlng", "117.33611995705515");
                    error_line.put("Tlat", "23.849355608251166");
-                    //error_map.remove("percent");
                     List<Map<String,Object>> badLineList=new ArrayList();
                     badLineList.add(error_line);
                     data_map.put("badPoint",badPointList);
                     data_map.put("badLine",badLineList);
                 }
-                //data_map.put(error_map)
                 Socket.sendMessage(JSON.toJSONString(data_map));
 
             }

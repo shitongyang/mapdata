@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import iscas.stategrid.mapdata.mapper.VoiceDao;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.VoiceService;
-import iscas.stategrid.mapdata.mapper.st_locationEntityMapper;
+import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.util.StaticResource;
 import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
 import iscas.stategrid.mapdata.websocket.VoiceSocket;
@@ -32,7 +32,7 @@ public class VoiceServiceImpl implements VoiceService {
     @Autowired
     private MapTopoWebSocket mapTopoWebSocket;
     @Autowired
-    private st_locationEntityMapper stLocationEntityMapper;
+    private LocationMapper stLocationEntityMapper;
     @Autowired
     private KongJService jcInfoService;
     private List<Map<String,String>> info;
