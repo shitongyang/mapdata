@@ -24,10 +24,6 @@ public class KongJServiceImpl implements KongJService {
 
     NumberFormat Nformat = NumberFormat.getInstance();
     /*
-    * 文件名
-    * */
-    private int count = 1;
-    /*
      * 安全性指标
      * */
     private int index_1 = 0;
@@ -129,7 +125,7 @@ public class KongJServiceImpl implements KongJService {
             } else if (i == 5) {
                 map.put("areaName", "西南");
             }
-            String filePath = rootPath+String.valueOf(i)+"/"+String.valueOf(count)+".txt";
+            String filePath = rootPath+String.valueOf(i)+"/"+String.valueOf(1)+".txt";
             List<String> content = fileClient.getContent(filePath);
             String str_hz = content.get(1).split(",")[1];
             String str_percent = content.get(1).split(",")[0];
@@ -142,10 +138,6 @@ public class KongJServiceImpl implements KongJService {
             map.put("percent",Nformat.format(percent)+"%");
             map.put("time", df.format(new Date()));
             area_info.add(map);
-        }
-        count = count+1;
-        if(count == 4){
-            count = 1;
         }
         return area_info;
     }
@@ -263,7 +255,7 @@ public class KongJServiceImpl implements KongJService {
             flag = "5/";
         }
         List<Map<String,String>> list = new ArrayList<>();
-        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(count)+".txt");
+        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(1)+".txt");
         String dev_value[] = content.get(1).split(",");
         int row_count = Integer.parseInt(modelName.substring(1));
         if(!"0".equals(dev_value[row_count])){
@@ -297,7 +289,7 @@ public class KongJServiceImpl implements KongJService {
             flag = "5/";
         }
         List<Map<String,Object>> list = new ArrayList<>();
-        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(count)+".txt");
+        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(1)+".txt");
         for (int i = 1; i < content.size(); i++) {
             Map<String,Object> map = new HashMap<>();
             String str_hz = content.get(1).split(",")[1];
