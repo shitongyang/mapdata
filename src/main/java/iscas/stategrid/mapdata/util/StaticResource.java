@@ -4,7 +4,6 @@ import java.util.*;
 
 public class StaticResource {
 
-
     public static final HashSet<String> AREA_Set=new HashSet<String>(){
         {
             add("华北");

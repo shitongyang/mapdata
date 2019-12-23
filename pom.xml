@@ -13,7 +13,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>mapdata</name>
     <description>Demo project for Spring Boot</description>
-
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -96,7 +95,12 @@
                     <overwrite>true</overwrite>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

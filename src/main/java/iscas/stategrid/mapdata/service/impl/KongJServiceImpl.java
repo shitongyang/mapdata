@@ -2,6 +2,7 @@ package iscas.stategrid.mapdata.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
+import iscas.stategrid.mapdata.util.FileClient;
 import iscas.stategrid.mapdata.util.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,10 @@ import static iscas.stategrid.mapdata.util.StaticResource.errorResult;
 public class KongJServiceImpl implements KongJService {
 
     NumberFormat Nformat = NumberFormat.getInstance();
-    // 设置小数位数
-
+    /*
+    * 文件名
+    * */
+    private int count = 1;
     /*
      * 安全性指标
      * */
@@ -106,15 +109,12 @@ public class KongJServiceImpl implements KongJService {
 
     @Override
     public List<Map<String, String>> getAreaInfo() {
+        String rootPath = "C:\\Users\\lvxianjin\\Desktop\\设计稿四\\result\\";
+        FileClient fileClient = new FileClient();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         area_info = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             Map<String, String> map = new HashMap<>();
-            double hz = ((int) (Math.random() * (60 - 40) + 40)) * 0.01;;
-            NumberFormat Nformat = NumberFormat.getInstance();
-            // 设置小数位数。
-            Nformat.setMaximumFractionDigits(2);
-            map.put("hz",Nformat.format(hz));
             if (i == 0) {
                 map.put("areaName", "华北");
             } else if (i == 1) {
@@ -128,9 +128,23 @@ public class KongJServiceImpl implements KongJService {
             } else if (i == 5) {
                 map.put("areaName", "西南");
             }
-            map.put("percent", (int) (Math.random() * (60 - 20) + 20) + "%");
+            String filePath = rootPath+String.valueOf(i)+"\\"+String.valueOf(count)+".txt";
+            List<String> content = fileClient.getContent(filePath);
+            String str_hz = content.get(1).split(",")[1];
+            String str_percent = content.get(1).split(",")[0];
+            double percent = Double.parseDouble(str_percent)*100;
+            double hz = Double.parseDouble(str_hz);
+            NumberFormat Nformat = NumberFormat.getInstance();
+            // 设置小数位数。
+            Nformat.setMaximumFractionDigits(2);
+            map.put("hz",Nformat.format(hz));
+            map.put("percent",Nformat.format(percent)+"%");
             map.put("time", df.format(new Date()));
             area_info.add(map);
+        }
+        count = count+1;
+        if(count == 4){
+            count = 1;
         }
         return area_info;
     }
@@ -231,7 +245,7 @@ public class KongJServiceImpl implements KongJService {
         return list;
     }
 
-    public List<Map<String, String>> getDeviceMotaiInfo() {
+    public List<Map<String, String>> getDeviceMotaiInfo(String area) {
         //获取设备模态信息
         List<Map<String,String>> list = new ArrayList<>();
         List<String> ids = new ArrayList<>();
@@ -260,7 +274,7 @@ public class KongJServiceImpl implements KongJService {
         return list;
     }
 
-    public List<Map<String,Object>> getAreaZDandZN()
+    public List<Map<String,Object>> getAreaZDandZN(String area)
     {
         //获得区域的震荡频率和阻尼比
         List<Map<String,Object>> list = new ArrayList<>();
@@ -417,13 +431,12 @@ public class KongJServiceImpl implements KongJService {
             list1.add("黑龙江兴安站");
             resultData.put("data1",getBaoJing(list1,isStatic));//获取报警信息
             resultData.put("data2",getImIndex(area,isStatic));//获取区域下省份的稳定指标信息
-
             resultData.put("data4","");
             resultData.put("data5","");
             resultData.put("data6","热力图,暂无");//热力图，暂无
             resultData.put("data7",getBaoRuoNumber());
-            resultData.put("data8",getDeviceMotaiInfo());//获取模式，震荡频率，阻尼比，与data5联动
-            resultData.put("data9",getAreaZDandZN());//获取模式，震荡频率，阻尼比
+            resultData.put("data8",getDeviceMotaiInfo(area));//获取模式，震荡频率，阻尼比，与data9联动
+            resultData.put("data9",getAreaZDandZN(area));//获取模式，震荡频率，阻尼比
             resultData.put("data10","");
         }
         else if(StaticResource.PROVINCE_Set.contains(area)){
@@ -433,15 +446,14 @@ public class KongJServiceImpl implements KongJService {
             list1.add("黑龙江繁荣站");
             resultData.put("data1",getBaoJing(list1,isStatic));//获取报警信息
             resultData.put("data2",getImIndex(area,isStatic));//获取区域下省份的稳定指标信息
-
             resultData.put("data4","");
             resultData.put("data5","");
             List<String> list6=stLocationEntityMapper.selectCityByProvince(area);
             System.out.println(list6);
             resultData.put("data6","热力图,暂无");
             resultData.put("data7",getBaoRuoNumber());
-            resultData.put("data8",getDeviceMotaiInfo());//获取模态信息与data9联动
-            resultData.put("data9",getAreaZDandZN());//获取模式，震荡频率，阻尼比
+            resultData.put("data8",getDeviceMotaiInfo(area));//获取模态信息与data9联动
+            resultData.put("data9",getAreaZDandZN(area));//获取模式，震荡频率，阻尼比
             resultData.put("data10",getWeather(stLocationEntityMapper.selectCityByProvince(area)));//获取天气状况
         }
         else if(StaticResource.CITY_SET.contains(area)){
@@ -456,9 +468,9 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data5","");
             resultData.put("data6","");
             resultData.put("data7",getBaoRuoNumber());
-            resultData.put("data8",getDeviceMotaiInfo());
+            resultData.put("data8",getDeviceMotaiInfo(area));
             //获取模态信息与data9联动
-            resultData.put("data9",getAreaZDandZN());
+            resultData.put("data9",getAreaZDandZN(area));
             //获取模式，震荡频率，阻尼比
             resultData.put("data10",getWeather(stLocationEntityMapper.selectCountyByCity(area)));
             //获取天气状况
@@ -503,9 +515,9 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data1",getBaoJing(list1,"1"));//获取报警信息
             resultData.put("data2",getImIndex(area,"1"));//获取区域下省份的稳定指标信息
 
-            resultData.put("data4",getDeviceMotaiInfo());
+            resultData.put("data4",getDeviceMotaiInfo(area));
             //获取模态信息与data5联动
-            resultData.put("data5",getAreaZDandZN());
+            resultData.put("data5",getAreaZDandZN(area));
             //获取模式，震荡频率，阻尼比
             resultData.put("data6","热力图,暂无");
             //热力图，暂无

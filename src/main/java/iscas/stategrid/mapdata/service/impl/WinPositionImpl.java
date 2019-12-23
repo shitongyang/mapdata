@@ -46,12 +46,12 @@ public class WinPositionImpl implements WinPositionService {
         }
 
 
-        //List<String> content1=getContent("/opt/data/1.txt");
-       // List<String> content2=getContent("/opt/data/2.txt");
-        //List<String> content3=getContent("/opt/data/3.txt");
-        List<String> content1=getContent("C:\\Users\\user\\Desktop\\data\\1.txt");
-        List<String> content2=getContent("C:\\Users\\user\\Desktop\\data\\2.txt");
-        List<String> content3=getContent("C:\\Users\\user\\Desktop\\data\\3.txt");
+//        List<String> content1=getContent("/opt/data/1.txt");
+//        List<String> content2=getContent("/opt/data/2.txt");
+//        List<String> content3=getContent("/opt/data/3.txt");
+        List<String> content1=getContent("C:\\Users\\lvxianjin\\Desktop\\cb\\1.txt");
+        List<String> content2=getContent("C:\\Users\\lvxianjin\\Desktop\\cb\\2.txt");
+        List<String> content3=getContent("C:\\Users\\lvxianjin\\Desktop\\cb\\3.txt");
 
         public List<String> getContent(String filePath){
             List<String> content=new ArrayList<>();
