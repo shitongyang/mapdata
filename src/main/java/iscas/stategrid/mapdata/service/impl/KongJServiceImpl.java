@@ -1,5 +1,6 @@
 package iscas.stategrid.mapdata.service.impl;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.util.FileClient;
@@ -243,31 +244,35 @@ public class KongJServiceImpl implements KongJService {
         return list;
     }
 
-    public List<Map<String, String>> getDeviceMotaiInfo(String area) {
+    public List<Map<String, String>> getDeviceMotaiInfo(String area,String modelName) {
         //获取设备模态信息
+        String rootPath = "/jar/lkb";
+        String flag = "";
+        FileClient fileClient = new FileClient();
+        if ("华北".equals(area)) {
+            flag = "0/";
+        } else if ("华东".equals(area)){
+            flag = "1/";
+        } else if ("华中".equals(area)) {
+            flag = "2/";
+        } else if ("东北".equals(area)) {
+            flag = "3/";
+        } else if ("西北".equals(area)) {
+            flag = "4/";
+        } else if ("西南".equals(area)) {
+            flag = "5/";
+        }
         List<Map<String,String>> list = new ArrayList<>();
-        List<String> ids = new ArrayList<>();
-        ids.add("device1");
-        ids.add("device2");
-        ids.add("device3");
-        ids.add("device4");
-        ids.add("device5");
-        ids.add("device6");
-        NumberFormat Nformat = NumberFormat.getInstance();
-        // 设置小数位数
-        Nformat.setMaximumFractionDigits(2);
-        int length=ids.size();
-        for (int i = 0; i <length ; i++) {
+        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(count)+".txt");
+        String dev_value[] = content.get(1).split(",");
+        int row_count = Integer.parseInt(modelName.substring(1));
+        if(!"0".equals(dev_value[row_count])){
             Map<String,String> map = new HashMap<>();
-            map.put("deviceName",ids.get(i));
-            double d = (int) (Math.random() * (60 - 40));
-
-            if(i%2==0){
-                d=0-d;
-                //取负数
+            map.put("deviceName",content.get(0).split(",")[row_count].split("-")[1]);
+            map.put("value",dev_value[row_count]);
+            if(list.size()<7){
+                    list.add(map);
             }
-            map.put("value",Nformat.format(d));
-            list.add(map);
         }
         return list;
     }
@@ -275,17 +280,38 @@ public class KongJServiceImpl implements KongJService {
     public List<Map<String,Object>> getAreaZDandZN(String area)
     {
         //获得区域的震荡频率和阻尼比
+        String rootPath = "/jar/lkb";
+        String flag = "";
+        FileClient fileClient = new FileClient();
+        if ("华北".equals(area)) {
+            flag = "0/";
+        } else if ("华东".equals(area)){
+            flag = "1/";
+        } else if ("华中".equals(area)) {
+            flag = "2/";
+        } else if ("东北".equals(area)) {
+            flag = "3/";
+        } else if ("西北".equals(area)) {
+            flag = "4/";
+        } else if ("西南".equals(area)) {
+            flag = "5/";
+        }
         List<Map<String,Object>> list = new ArrayList<>();
-        Map<String,Object> map = new HashMap<>();
-        map.put("modelName","模式1");
-        map.put("hz","0.1");
-        map.put("percent","0.6");
-        list.add(map);
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("modelName","模式2");
-        map1.put("hz","0.5");
-        map1.put("percent","0.2");
-        list.add(map1);
+        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(count)+".txt");
+        for (int i = 1; i < content.size(); i++) {
+            Map<String,Object> map = new HashMap<>();
+            String str_hz = content.get(1).split(",")[1];
+            String str_percent = content.get(1).split(",")[0];
+            double percent = Double.parseDouble(str_percent)*100;
+            double hz = Double.parseDouble(str_hz);
+            NumberFormat Nformat = NumberFormat.getInstance();
+            // 设置小数位数。
+            Nformat.setMaximumFractionDigits(2);
+            map.put("modelName","模式"+String.valueOf(i));
+            map.put("hz",Nformat.format(hz));
+            map.put("percent",Nformat.format(percent)+"%");
+            list.add(map);
+        }
         return list;
     }
     public List<Map<String,Object>> getWeather(List<String> list){
@@ -433,7 +459,7 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data5","");
             resultData.put("data6","热力图,暂无");//热力图，暂无
             resultData.put("data7",getBaoRuoNumber());
-            resultData.put("data8",getDeviceMotaiInfo(area));//获取模式，震荡频率，阻尼比，与data9联动
+            resultData.put("data8",getDeviceMotaiInfo(area,model));//获取模式，震荡频率，阻尼比，与data9联动
             resultData.put("data9",getAreaZDandZN(area));//获取模式，震荡频率，阻尼比
             resultData.put("data10","");
         }
@@ -450,7 +476,7 @@ public class KongJServiceImpl implements KongJService {
             System.out.println(list6);
             resultData.put("data6","热力图,暂无");
             resultData.put("data7",getBaoRuoNumber());
-            resultData.put("data8",getDeviceMotaiInfo(area));//获取模态信息与data9联动
+            resultData.put("data8",getDeviceMotaiInfo(area,model));//获取模态信息与data9联动
             resultData.put("data9",getAreaZDandZN(area));//获取模式，震荡频率，阻尼比
             resultData.put("data10",getWeather(stLocationEntityMapper.selectCityByProvince(area)));//获取天气状况
         }
@@ -466,7 +492,7 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data5","");
             resultData.put("data6","");
             resultData.put("data7",getBaoRuoNumber());
-            resultData.put("data8",getDeviceMotaiInfo(area));
+            resultData.put("data8",getDeviceMotaiInfo(area,model));
             //获取模态信息与data9联动
             resultData.put("data9",getAreaZDandZN(area));
             //获取模式，震荡频率，阻尼比
@@ -496,12 +522,10 @@ public class KongJServiceImpl implements KongJService {
             list1.add("国调灵宝换流站");
             resultData.put("data1",getBaoJing(list1,"1"));//获取报警信息
             resultData.put("data2",getImIndex("全国","1"));//获取稳定指标信息
-
             resultData.put("data4",getAreaInfo());//获取六大区域的震荡频率和阻尼比
             resultData.put("data5",getBoRuo(list1));//获取薄弱点信息
             resultData.put("data6","热力图,暂无");//热力图
             resultData.put("data7",getBaoRuoNumber());
-
             resultData.put("data11","");
             resultData.put("data12","");
         }
@@ -512,10 +536,9 @@ public class KongJServiceImpl implements KongJService {
             list1.add("黑龙江兴安站");
             resultData.put("data1",getBaoJing(list1,"1"));//获取报警信息
             resultData.put("data2",getImIndex(area,"1"));//获取区域下省份的稳定指标信息
-
-            resultData.put("data4",getDeviceMotaiInfo(area));
+            resultData.put("data4","");
             //获取模态信息与data5联动
-            resultData.put("data5",getAreaZDandZN(area));
+            resultData.put("data5","");
             //获取模式，震荡频率，阻尼比
             resultData.put("data6","热力图,暂无");
             //热力图，暂无
@@ -545,6 +568,9 @@ public class KongJServiceImpl implements KongJService {
         String area=object.getString("area");
         String JZStatus=object.getString("JZStatus");
         String model=object.getString("model");
+        if("".equals(model)){
+            model = "模式1";
+        }
         if("1".equals(type)){
             //实时态
             return getKongJInfo1(area,JZStatus,model);
