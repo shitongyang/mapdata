@@ -109,7 +109,7 @@ public class KongJServiceImpl implements KongJService {
 
     @Override
     public List<Map<String, String>> getAreaInfo() {
-        String rootPath = "C:\\Users\\lvxianjin\\Desktop\\设计稿四\\result\\";
+        String rootPath = "/jar/lkb/";
         FileClient fileClient = new FileClient();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         area_info = new ArrayList<>();
@@ -128,7 +128,7 @@ public class KongJServiceImpl implements KongJService {
             } else if (i == 5) {
                 map.put("areaName", "西南");
             }
-            String filePath = rootPath+String.valueOf(i)+"\\"+String.valueOf(count)+".txt";
+            String filePath = rootPath+String.valueOf(i)+"/"+String.valueOf(count)+".txt";
             List<String> content = fileClient.getContent(filePath);
             String str_hz = content.get(1).split(",")[1];
             String str_percent = content.get(1).split(",")[0];
@@ -220,8 +220,6 @@ public class KongJServiceImpl implements KongJService {
         }
         return list;
     }
-
-
 
     public List<Map<String, String>> getControlPolice() {
         //获取设备调控策略
