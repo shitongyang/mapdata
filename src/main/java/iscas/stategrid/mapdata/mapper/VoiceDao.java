@@ -17,4 +17,6 @@ public interface VoiceDao {
     public Map<String,String> getErrorInfo(String id);
     public List<Map<String,String>> getLineInfo(String name);
     public Map<String,String> getLocationByName(String name);
+
+
 }

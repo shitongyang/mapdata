@@ -6,3 +6,5 @@ MapTopoWebSocket是地图的socket
 ControlSocket是控件的socket
 
 VoiceSocket是语音的socket
+
+控件的刷新频率是一分钟一次，地图的刷新是5秒和1秒
