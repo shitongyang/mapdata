@@ -1,7 +1,5 @@
 package iscas.stategrid.mapdata.mapper;
 
-import iscas.stategrid.mapdata.domain.st_locationEntity;
-import iscas.stategrid.mapdata.domain.st_locationEntityExample;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
@@ -11,14 +9,6 @@ import java.util.Map;
 @Mapper
 @Component
 public interface LocationMapper {
-    long countByExample(st_locationEntityExample example);
-    int deleteByPrimaryKey(Integer id);
-    int insert(st_locationEntity record);
-    int insertSelective(st_locationEntity record);
-    st_locationEntity selectByPrimaryKey(Integer id);
-    //List<st_locationEntity> selectAll();
-    int updateByPrimaryKeySelective(st_locationEntity record);
-    int updateByPrimaryKey(st_locationEntity record);
 
     //获得全国的拓扑结构
     List<Map<String,Object>> selectGlobalTopo();

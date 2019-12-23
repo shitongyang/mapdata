@@ -1,7 +1,7 @@
 package iscas.stategrid.mapdata.websocket;
 
 import com.alibaba.fastjson.JSON;
-import iscas.stategrid.mapdata.service.dc_lineService;
+import iscas.stategrid.mapdata.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ public class GlobalTopoWebSocket {
 //        GlobalTopoWebSocket.a=thread;
 //    }
 
-    private static dc_lineService dc_lineService;
+    private static MapService mapService;
     /**
      * session 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
@@ -37,8 +37,8 @@ public class GlobalTopoWebSocket {
     private static CopyOnWriteArraySet<GlobalTopoWebSocket> webSocketSet = new CopyOnWriteArraySet();
 
     @Autowired
-    public void setdc_lineService(dc_lineService dc_lineService) {
-        GlobalTopoWebSocket.dc_lineService = dc_lineService;
+    public void setdc_lineService(MapService mapService) {
+        GlobalTopoWebSocket.mapService = mapService;
     }
     /**
      * 功能描述: websocket 连接建立成功后进行调用
@@ -137,7 +137,7 @@ public class GlobalTopoWebSocket {
                     Thread.sleep(timeInterval);
                     long start=System.currentTimeMillis();
                     System.out.println(this.name);
-                    List<Map<String,Object>> topo_info = dc_lineService.getTopoLine(this.name);
+                    List<Map<String,Object>> topo_info = mapService.getTopoLine(this.name);
                     Map<String,List<Map<String,Object>>> result=new HashMap<>();
                     result.put("topo",topo_info);
                     sendMessage(JSON.toJSONString(result));

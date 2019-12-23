@@ -110,6 +110,7 @@ public class KongJServiceImpl implements KongJService {
     @Override
     public List<Map<String, String>> getAreaInfo() {
         String rootPath = "/jar/lkb/";
+        //String rootPath="C:\\Users\\user\\Desktop\\getAreaInfo\\result";
         FileClient fileClient = new FileClient();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         area_info = new ArrayList<>();

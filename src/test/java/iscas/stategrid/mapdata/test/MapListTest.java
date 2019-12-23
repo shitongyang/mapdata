@@ -1,6 +1,6 @@
 package iscas.stategrid.mapdata.test;
 
-import iscas.stategrid.mapdata.service.impl.dc_lineImpl;
+import iscas.stategrid.mapdata.service.impl.MapServiceImpl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +14,6 @@ import java.util.Map;
  */
 
 public class MapListTest {
-    private static iscas.stategrid.mapdata.service.dc_lineService dc_lineService=new dc_lineImpl();
     public static void main(String[] args) {
         Map<String, List<Map<String,Object>>> testMap=new HashMap<>();
         System.out.println(testMap);

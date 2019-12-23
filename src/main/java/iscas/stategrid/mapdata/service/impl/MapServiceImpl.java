@@ -1,7 +1,7 @@
 package iscas.stategrid.mapdata.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import iscas.stategrid.mapdata.service.dc_lineService;
+import iscas.stategrid.mapdata.service.MapService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.util.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import java.util.*;
 import static iscas.stategrid.mapdata.util.StaticResource.errorResult;
 
 @Service
-public class dc_lineImpl implements dc_lineService {
+public class MapServiceImpl implements MapService {
 
     @Autowired
     private LocationMapper locationEntitymapper;
