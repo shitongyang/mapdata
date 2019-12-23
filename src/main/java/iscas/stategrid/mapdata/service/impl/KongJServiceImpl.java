@@ -125,7 +125,7 @@ public class KongJServiceImpl implements KongJService {
             } else if (i == 5) {
                 map.put("areaName", "西南");
             }
-            String filePath = rootPath+String.valueOf(i)+"/"+String.valueOf(1)+".txt";
+            String filePath = rootPath+String.valueOf(i)+"/"+String.valueOf(2)+".txt";
             List<String> content = fileClient.getContent(filePath);
             String str_hz = content.get(1).split(",")[1];
             String str_percent = content.get(1).split(",")[0];
@@ -255,7 +255,7 @@ public class KongJServiceImpl implements KongJService {
             flag = "5/";
         }
         List<Map<String,String>> list = new ArrayList<>();
-        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(1)+".txt");
+        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(2)+".txt");
         String dev_value[] = content.get(1).split(",");
         int row_count = Integer.parseInt(modelName.substring(1));
         if(!"0".equals(dev_value[row_count])){
@@ -289,7 +289,7 @@ public class KongJServiceImpl implements KongJService {
             flag = "5/";
         }
         List<Map<String,Object>> list = new ArrayList<>();
-        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(1)+".txt");
+        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(2)+".txt");
         for (int i = 1; i < content.size(); i++) {
             Map<String,Object> map = new HashMap<>();
             String str_hz = content.get(1).split(",")[1];
