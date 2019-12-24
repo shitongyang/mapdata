@@ -133,7 +133,7 @@ public class ControlSocket {
                 Map<String,Object> area_info = KongJService.getKongJInfo(name);
                 sendMessage(JSON.toJSONString(area_info));
                 try {
-                    Thread.sleep(60000);
+                    Thread.sleep(8000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

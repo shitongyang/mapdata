@@ -1,6 +1,6 @@
 package iscas.stategrid.mapdata.service.impl;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
+import iscas.stategrid.mapdata.mapper.KongJianMapper;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.util.FileClient;
@@ -59,6 +59,9 @@ public class KongJServiceImpl implements KongJService {
     @Autowired
     private LocationMapper stLocationEntityMapper;
 
+    @Autowired
+    private KongJianMapper kongJianMapper;
+
     @Override
     public List<String> getErrorInfo() {
         List<String> info = new ArrayList<>();
@@ -107,6 +110,7 @@ public class KongJServiceImpl implements KongJService {
     @Override
     public List<Map<String, String>> getAreaInfo() {
         String rootPath = "/jar/lkb/";
+        //String rootPath="C:\\Users\\user\\Desktop\\getAreaInfo\\result\\";
         FileClient fileClient = new FileClient();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         area_info = new ArrayList<>();
@@ -214,26 +218,22 @@ public class KongJServiceImpl implements KongJService {
         return list;
     }
 
-    public List<Map<String, String>> getControlPolice() {
+
+
+    public List<Map<String, Object>> getControlPolice() {
         //获取设备调控策略
-        List<Map<String,String>> list = new ArrayList<>();
-        List<String> ids = new ArrayList<>();
-        ids.add("1#发电机");
-        ids.add("2#发电机");
-        ids.add("3#发电机");
-        ids.add("4#发电机");
-        NumberFormat Nformat = NumberFormat.getInstance();
-        // 设置小数位数
+        //对应的是device_police表
+        List<Map<String,Object>> list = kongJianMapper.getDevicePolice();
+        List<Map<String,Object>> resultList =new ArrayList<>();
         Nformat.setMaximumFractionDigits(2);
-        int length=ids.size();
+        int length=list.size();
         for (int i = 0; i <length ; i++) {
-            Map<String,String> map = new HashMap<>();
-            map.put("deviceName",ids.get(i));
-            double d = ((int) (Math.random() * (60 - 40) + 40)) * 0.01;
-            map.put("index",Nformat.format(d));
-            list.add(map);
+            Map<String,Object> map = new HashMap<>();
+            map.put("deviceName",list.get(i).get("nodeName").toString()+list.get(i).get("policeName"));
+            map.put("index",list.get(i).get("index"));
+            resultList.add(map);
         }
-        return list;
+        return resultList;
     }
 
     public List<Map<String, String>> getDeviceMotaiInfo(String area,String modelName) {
@@ -256,14 +256,16 @@ public class KongJServiceImpl implements KongJService {
         }
         List<Map<String,String>> list = new ArrayList<>();
         List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(2)+".txt");
-        String dev_value[] = content.get(1).split(",");
         int row_count = Integer.parseInt(modelName.substring(2));
-        if(!"0".equals(dev_value[row_count])){
-            Map<String,String> map = new HashMap<>();
-            map.put("deviceName",content.get(0).split(",")[row_count].split("-")[1]);
-            map.put("value",dev_value[row_count]);
-            if(list.size()<7){
+        String dev_value[] = content.get(row_count).split(",");
+        for (int i = 2; i <dev_value.length ; i++) {
+            if(!"0".equals(dev_value[i])){
+                Map<String,String> map = new HashMap<>();
+                map.put("deviceName",content.get(0).split(",")[i].split("-")[1]);
+                map.put("value",dev_value[i]);
+                if(list.size()<7){
                     list.add(map);
+                }
             }
         }
         return list;
@@ -272,7 +274,7 @@ public class KongJServiceImpl implements KongJService {
     public List<Map<String,Object>> getAreaZDandZN(String area)
     {
         //获得区域的震荡频率和阻尼比
-        String rootPath = "/jar/lkb";
+        String rootPath = "/jar/lkb/";
         String flag = "";
         FileClient fileClient = new FileClient();
         if ("华北".equals(area)) {
@@ -292,8 +294,8 @@ public class KongJServiceImpl implements KongJService {
         List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(2)+".txt");
         for (int i = 1; i < content.size(); i++) {
             Map<String,Object> map = new HashMap<>();
-            String str_hz = content.get(1).split(",")[1];
-            String str_percent = content.get(1).split(",")[0];
+            String str_hz = content.get(i).split(",")[1];
+            String str_percent = content.get(i).split(",")[0];
             double percent = Double.parseDouble(str_percent)*100;
             double hz = Double.parseDouble(str_hz);
             NumberFormat Nformat = NumberFormat.getInstance();
@@ -324,13 +326,14 @@ public class KongJServiceImpl implements KongJService {
         return resultList;
     }
 
-    public List<Map<String, Object>> getBaoJing(List<String> list1,String isStatic){
+    public List<Map<String, Object>> getBaoJing(String area,String isStatic){
         //获取报警信息
         SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        List<Map<String,Object>> list1 = kongJianMapper.getBoRuo(area);
+
         List<Map<String,Object>> list = new ArrayList<>();
         for(int i=0;i<list1.size();i++){
-            double police = ((int) (Math.random() * (8 -5 ) + 5)) * 0.1;
-
+            double police = Double.parseDouble(list1.get(i).get("before").toString());
             if("2".equals(isStatic)){
                 police=((int) (Math.random() * (6 -4 ) + 4)) * 0.1;
                 //暂态时的指标
@@ -339,15 +342,35 @@ public class KongJServiceImpl implements KongJService {
             String str=Nformat.format(police);
             //取两位小数
             Map<String,Object> map = new HashMap<>();
-            map.put("message",df.format(new Date())+" "+list1.get(i)+" " +str);
-            if(i%3==0) {
-                map.put("type", "薄弱");
+            map.put("message",df.format(new Date())+" "+list1.get(i).get("name")+" " +str);
+            int length=list1.size()-1;
+            if(i!=0&&i!=length) {
+                if("2".equals(isStatic)){
+                    map.put("type", "一般风险");
+                }
+                else
+                    map.put("type", "薄弱");
+                map.put("dLevel","2");
             }
-            else if(i%3==1){
-                map.put("type", "较薄弱");
+            else if(i==0){
+                if("2".equals(isStatic)){
+                    map.put("type", "高风险");
+                }
+                else{
+                    map.put("type", "最薄弱");
+                }
+
+                map.put("dLevel","1");
             }
-            else if(i%3==2) {
-                map.put("type", "最薄弱");
+            else if(i==length) {
+                if("2".equals(isStatic)){
+                    map.put("type", "低风险");
+                }
+                else
+                {
+                    map.put("type", "较薄弱");
+                }
+                map.put("dLevel","3");
             }
             list.add(map);
         }
@@ -356,23 +379,23 @@ public class KongJServiceImpl implements KongJService {
     }
     public Map<String, Object> getBaoRuoNumber(){
         //获取各个薄弱节点的数量
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-        List<Map<String,Object>> list = new ArrayList<>();
         Map<String,Object> map = new HashMap<>();
         map.put("number1",1);
-        map.put("number2",1);
+        map.put("number2",4);
         map.put("number3",1);
         //最薄弱
         return map;
     }
-    public List<Map<String, Object>> getBoRuo(List<String> list1){
+    public List<Map<String, Object>> getBoRuo(String area){
         //获取全国的薄弱节点
+        List<Map<String,Object>> list1 = kongJianMapper.getBoRuo(area);
         List<Map<String,Object>> list = new ArrayList<>();
+        Nformat.setMaximumFractionDigits(2);
         for(int i=0;i<list1.size();i++){
-            double police = ((int) (Math.random() * (8 - 2) + 2)) * 0.01;
             Map<String,Object> map = new HashMap<>();
-            map.put("nodeName",list1.get(i));
-            map.put("number",police);
+            map.put("nodeName",list1.get(i).get("name"));
+            double police = Double.parseDouble((list1.get(i).get("before")).toString());
+            map.put("number",Nformat.format(police));
             list.add(map);
         }
 
@@ -425,15 +448,11 @@ public class KongJServiceImpl implements KongJService {
         Map<String,Object> resultData =new HashMap<>();
         //获取五个仪表盘的数据
         if("全国".equals(area)){
-            List<String> list1=new ArrayList<>();
-            list1.add("国调龙泉换流站");
-            list1.add("华东东明");
-            list1.add("国调灵宝换流站");
-            resultData.put("data1",getBaoJing(list1,isStatic));//获取报警信息
+            resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
             resultData.put("data2",getImIndex("全国",isStatic));//获取稳定指标信息
 
             resultData.put("data4",getAreaInfo());//获取六大区域的震荡频率和阻尼比
-            resultData.put("data5",getBoRuo(list1));//获取薄弱点信息
+            resultData.put("data5",getBoRuo(area));//获取薄弱点信息
             resultData.put("data6","热力图,暂无");//热力图
             resultData.put("data7",getBaoRuoNumber());//获取薄弱节点各个的数量
             resultData.put("data8","");
@@ -441,11 +460,7 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data10","");
         }
         else if(StaticResource.AREA_Set.contains(area)){
-            List<String> list1=new ArrayList<>();
-            list1.add("吉林荣家变");
-            list1.add("辽宁岭南站");
-            list1.add("黑龙江兴安站");
-            resultData.put("data1",getBaoJing(list1,isStatic));//获取报警信息
+            resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
             resultData.put("data2",getImIndex(area,isStatic));//获取区域下省份的稳定指标信息
             resultData.put("data4","");
             resultData.put("data5","");
@@ -456,11 +471,7 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data10","");
         }
         else if(StaticResource.PROVINCE_Set.contains(area)){
-            List<String> list1=new ArrayList<>();
-            list1.add("黑龙江城乡站");
-            list1.add("黑龙江尚牵站");
-            list1.add("黑龙江繁荣站");
-            resultData.put("data1",getBaoJing(list1,isStatic));//获取报警信息
+            resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
             resultData.put("data2",getImIndex(area,isStatic));//获取区域下省份的稳定指标信息
             resultData.put("data4","");
             resultData.put("data5","");
@@ -473,11 +484,7 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data10",getWeather(stLocationEntityMapper.selectCityByProvince(area)));//获取天气状况
         }
         else if(StaticResource.CITY_SET.contains(area)){
-            List<String> list1=new ArrayList<>();
-            list1.add("爱华风电厂");
-            list1.add("和平风电厂");
-            list1.add("穆牵站");
-            resultData.put("data1",getBaoJing(list1,isStatic));//获取报警信息
+            resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
             resultData.put("data2",getImIndex("哈尔滨市",isStatic));//获取区域下省份的稳定指标信息
 
             resultData.put("data4","");
@@ -508,30 +515,23 @@ public class KongJServiceImpl implements KongJService {
         //模拟态
         Map<String,Object> resultData =new HashMap<>();
         if("全国".equals(area)){
-            List<String> list1=new ArrayList<>();
-            list1.add("国调龙泉换流站");
-            list1.add("华东东明");
-            list1.add("国调灵宝换流站");
-            resultData.put("data1",getBaoJing(list1,"1"));//获取报警信息
+            resultData.put("data1",getBaoJing(area,"1"));//获取报警信息
             resultData.put("data2",getImIndex("全国","1"));//获取稳定指标信息
+
             resultData.put("data4",getAreaInfo());//获取六大区域的震荡频率和阻尼比
-            resultData.put("data5",getBoRuo(list1));//获取薄弱点信息
+            resultData.put("data5",getBoRuo(area));//获取薄弱点信息
             resultData.put("data6","热力图,暂无");//热力图
             resultData.put("data7",getBaoRuoNumber());
+
             resultData.put("data11","");
             resultData.put("data12","");
         }
         else if(StaticResource.AREA_Set.contains(area)){
-            List<String> list1=new ArrayList<>();
-            list1.add("吉林荣家变");
-            list1.add("辽宁岭南站");
-            list1.add("黑龙江兴安站");
-            resultData.put("data1",getBaoJing(list1,"1"));//获取报警信息
+            resultData.put("data1",getBaoJing(area,"1"));//获取报警信息
             resultData.put("data2",getImIndex(area,"1"));//获取区域下省份的稳定指标信息
+
             resultData.put("data4","");
-            //获取模态信息与data5联动
             resultData.put("data5","");
-            //获取模式，震荡频率，阻尼比
             resultData.put("data6","热力图,暂无");
             //热力图，暂无
             resultData.put("data7",getBaoRuoNumber());
