@@ -253,6 +253,8 @@ public class KongJServiceImpl implements KongJService {
             flag = "4/";
         } else if ("西南".equals(area)) {
             flag = "5/";
+        }else {
+            flag = "2/";
         }
         List<Map<String,String>> list = new ArrayList<>();
         List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(2)+".txt");
@@ -289,6 +291,8 @@ public class KongJServiceImpl implements KongJService {
             flag = "4/";
         } else if ("西南".equals(area)) {
             flag = "5/";
+        }else {
+            flag = "2/";
         }
         List<Map<String,Object>> list = new ArrayList<>();
         List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(2)+".txt");
@@ -348,8 +352,9 @@ public class KongJServiceImpl implements KongJService {
                 if("2".equals(isStatic)){
                     map.put("type", "一般风险");
                 }
-                else
+                else{
                     map.put("type", "薄弱");
+                }
                 map.put("dLevel","2");
             }
             else if(i==0){
@@ -476,7 +481,6 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data4","");
             resultData.put("data5","");
             List<String> list6=stLocationEntityMapper.selectCityByProvince(area);
-            System.out.println(list6);
             resultData.put("data6","热力图,暂无");
             resultData.put("data7",getBaoRuoNumber());
             resultData.put("data8",getDeviceMotaiInfo(area,model));//获取模态信息与data9联动

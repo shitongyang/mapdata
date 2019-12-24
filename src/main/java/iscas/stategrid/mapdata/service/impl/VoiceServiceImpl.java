@@ -63,13 +63,7 @@ public class VoiceServiceImpl implements VoiceService {
             String police = jcInfoService.getPoliceInfo();
             msg = url + "当前电网的调控策略有：" + police;
         } else if (commandType.equals("07")) {
-            String hz = jcInfoService.getHZByArea(area);
-            if (hz.equals("")) {
-                message = "查询失败";
-                msg = url + "没有查到相关信息";
-            } else {
-                msg = url + area + "地区的振荡频率是" + hz;
-            }
+
         } else if (commandType.equals("08")) {
             String percent = jcInfoService.getZNByArea(area);
             if (percent.equals("")) {

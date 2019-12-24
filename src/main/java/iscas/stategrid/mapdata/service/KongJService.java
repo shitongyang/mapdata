@@ -51,16 +51,6 @@ public interface KongJService {
  List<Map<String, String>> getAreaInfo();
  /**
   *
-  * 功能描述: 根据地区名称获取振荡频率信息
-  *
-  * @param:
-  * @return:
-  * @auther: lvxianjin
-  * @date: 2019/10/28 8:07
-  */
- String getHZByArea(String area);
- /**
-  *
   * 功能描述: 根据地区名称获取阻尼比
   *
   * @param:
@@ -96,5 +86,6 @@ List<Map<String,String>> getImIndex(String area,String isStatic);
  //yangst
  Map<String,Object> getKongJInfo(String message);
  //level表示全国，区域，省，市
+ public String getHZByArea(String area);
 }
 
