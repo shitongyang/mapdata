@@ -238,7 +238,7 @@ public class KongJServiceImpl implements KongJService {
 
     public List<Map<String, String>> getDeviceMotaiInfo(String area,String modelName) {
         //获取设备模态信息
-        String rootPath = "/jar/lkb";
+        String rootPath = "/jar/lkb/";
         String flag = "";
         FileClient fileClient = new FileClient();
         if ("华北".equals(area)) {
