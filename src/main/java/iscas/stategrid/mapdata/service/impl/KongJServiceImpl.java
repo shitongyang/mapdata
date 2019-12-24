@@ -110,7 +110,7 @@ public class KongJServiceImpl implements KongJService {
     @Override
     public List<Map<String, String>> getAreaInfo() {
         String rootPath = "/jar/lkb/";
-        //String rootPath="C:\\Users\\user\\Desktop\\getAreaInfo\\result";
+        //String rootPath="C:\\Users\\user\\Desktop\\getAreaInfo\\result\\";
         FileClient fileClient = new FileClient();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         area_info = new ArrayList<>();
@@ -220,28 +220,20 @@ public class KongJServiceImpl implements KongJService {
 
 
 
-    public List<Map<String, String>> getControlPolice() {
+    public List<Map<String, Object>> getControlPolice() {
         //获取设备调控策略
-        List<Map<String,String>> list = new ArrayList<>();
-        List<String> ids = new ArrayList<>();
-        ids.add("山东海阳核电 发电机调压");
-        ids.add("山东潍坊电厂 发电机调压");
-        ids.add("山东莱州电厂 发电机调压");
-        ids.add("山东滨海国电 发电机调压");
-        ids.add("山东羊口电厂 发电机调压");
-        ids.add("山东莱州电厂 发电机调压");
-        NumberFormat Nformat = NumberFormat.getInstance();
-        // 设置小数位数
+        //对应的是device_police表
+        List<Map<String,Object>> list = kongJianMapper.getDevicePolice();
+        List<Map<String,Object>> resultList =new ArrayList<>();
         Nformat.setMaximumFractionDigits(2);
-        int length=ids.size();
+        int length=list.size();
         for (int i = 0; i <length ; i++) {
-            Map<String,String> map = new HashMap<>();
-            map.put("deviceName",ids.get(i));
-            double d = ((int) (Math.random() * (60 - 40) + 40)) * 0.01;
-            map.put("index",Nformat.format(d));
-            list.add(map);
+            Map<String,Object> map = new HashMap<>();
+            map.put("deviceName",list.get(i).get("nodeName").toString()+list.get(i).get("policeName"));
+            map.put("index",list.get(i).get("index"));
+            resultList.add(map);
         }
-        return list;
+        return resultList;
     }
 
     public List<Map<String, String>> getDeviceMotaiInfo(String area,String modelName) {

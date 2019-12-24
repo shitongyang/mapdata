@@ -6,4 +6,8 @@
         select a.name,a.before from margin a where area =#{area} and a.before is not null order by
 a.before
     </select>
+
+    <select id="getDevicePolice" resultType="java.util.Map">
+        select * from device_police
+    </select>
 </mapper>

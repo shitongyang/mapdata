@@ -17,4 +17,5 @@ import java.util.Map;
 public interface KongJianMapper {
     public List<Map<String,Object>> getBoRuo(String area);
     //获取薄弱点裕度
+    public List<Map<String,Object>> getDevicePolice();
 }

@@ -113,21 +113,37 @@ public class MapTopoWebSocket {
                 //地图是否隐藏，false的话不隐藏，ture的话隐藏
                 if(quyu.equals("全国")&&isStatic.equals("2")){
                     Map<String,Object> error_map = new HashMap<>();
-                    error_map.put("Flng", "106.23849358740017");
-                    error_map.put("Flat", "38.492460055509596");
-                    error_map.put("Tlng", "117.33611995705515");
-                    error_map.put("Tlat", "23.849355608251166");
+                    error_map.put("Flng", "111.04057");
+                    error_map.put("Flat", "30.832745");
+                    error_map.put("Tlng", "111.456515837124");
+                    error_map.put("Tlat", "30.38440427431352");
                     error_map.put("percent","0.3");
                     List<Map<String,Object>> badPointList=new ArrayList();
                     badPointList.add(error_map);
 
-                    Map<String,Object> error_line = new HashMap<>();
-                    error_line.put("Flng", "106.23849358740017");
-                    error_line.put("Flat", "38.492460055509596");
-                    error_line.put("Tlng", "117.33611995705515");
-                    error_line.put("Tlat", "23.849355608251166");
+                    Map<String,Object> error_line1 = new HashMap<>();
+                    error_line1.put("Flng", "111.04057");
+                    error_line1.put("Flat", "30.832745");
+                    error_line1.put("Tlng", "111.456515837124");
+                    error_line1.put("Tlat", "30.38440427431352");
+
+                    Map<String,Object> error_line2 = new HashMap<>();
+                    error_line2.put("Flng", "111.04057");
+                    error_line2.put("Flat", "30.832745");
+                    error_line2.put("Tlng", "112.43145201727503");
+                    error_line2.put("Tlat", "30.048042984592485");
+
+
+                    Map<String,Object> error_line3 = new HashMap<>();
+                    error_line3.put("Flng", "111.456515837124");
+                    error_line3.put("Flat", "30.38440427431352");
+                    error_line3.put("Tlng", "114.519578");
+                    error_line3.put("Tlat", "34.787032");
+
                     List<Map<String,Object>> badLineList=new ArrayList();
-                    badLineList.add(error_line);
+                    badLineList.add(error_line1);
+                    badLineList.add(error_line2);
+                    badLineList.add(error_line3);
                     result.put("badPoint",badPointList);
                     result.put("badLine",badLineList);
                 }
