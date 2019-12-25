@@ -36,7 +36,7 @@ public class VoiceSocket {
     public void onOpen(Session session) {
         this.session = session;
         webSocketSet.add(this);
-        System.out.println("节点Socket连接成功");
+        System.out.println("语音Socket连接成功");
     }
 
     /**
@@ -45,7 +45,7 @@ public class VoiceSocket {
     @OnClose
     public void onClose() {
         webSocketSet.remove(this);
-        System.out.println("节点Socket连接关闭");
+        System.out.println("语音Socket连接关闭");
     }
 
     /**
@@ -74,9 +74,9 @@ public class VoiceSocket {
     public void sendMessage(String message) {
         for (VoiceSocket socketServer : webSocketSet) {
             try {
-                //synchronized (session) {
+                synchronized (session) {
                 socketServer.session.getBasicRemote().sendText(message);
-                //}
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

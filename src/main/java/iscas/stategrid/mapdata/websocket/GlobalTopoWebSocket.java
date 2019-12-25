@@ -81,12 +81,12 @@ public class GlobalTopoWebSocket {
 
         if(str=="") {
             str = message;
-            a= new MyThread(message);
+            //a= new MyThread(message);
             a.start();
         }
         if(str!=message){
             a.stop();
-            a= new MyThread(message);
+            //a= new MyThread(message);
             a.start();
             str=message;
         }

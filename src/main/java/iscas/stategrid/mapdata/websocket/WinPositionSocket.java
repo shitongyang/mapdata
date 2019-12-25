@@ -38,7 +38,7 @@ public class WinPositionSocket {
     public void onOpen(Session session) {
         this.session = session;
         webSocketSet.add(this);
-        System.out.println("节点Socket连接成功");
+        System.out.println("风电场Socket连接成功");
     }
 
     /**
@@ -47,7 +47,7 @@ public class WinPositionSocket {
     @OnClose
     public void onClose() {
         webSocketSet.remove(this);
-        System.out.println("节点Socket连接关闭");
+        System.out.println("风电场Socket连接关闭");
     }
 
     /**
@@ -75,9 +75,9 @@ public class WinPositionSocket {
     public void sendMessage(String message) {
         for (WinPositionSocket socketServer : webSocketSet) {
             try {
-                //synchronized (session) {
+                synchronized (session) {
                 socketServer.session.getBasicRemote().sendText(message);
-                //}
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

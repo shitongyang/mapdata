@@ -25,7 +25,7 @@ public class ControlSocket {
      */
     private Session session;
 
-    private  String str="";
+    private  static volatile String str="";
     //保存前端传过来的值
     private static MyThread1 a=null;
     /**
@@ -48,7 +48,7 @@ public class ControlSocket {
     public void onOpen(Session session) {
         this.session = session;
         webSocketSet.add(this);
-        System.out.println("区域Socket连接成功");
+        System.out.println("控件Socket连接成功");
     }
 
     /**
@@ -59,7 +59,7 @@ public class ControlSocket {
         webSocketSet.remove(this);
         if(a!=null)
             a.stop();
-        System.out.println("区域Socket连接关闭");
+        System.out.println("控件Socket连接关闭");
     }
     /**
      * 收到节点信息
@@ -68,7 +68,7 @@ public class ControlSocket {
      */
     @OnMessage
     public void onMessage(String message) {
-        System.out.println("KJ的socket传来的参数是"+message);
+        System.out.println("控件_的socket传来的参数是"+message);
         if(str=="") {
             str = message;
             a= new MyThread1(message);
@@ -96,9 +96,9 @@ public class ControlSocket {
     public void sendMessage(String message) {
         for (ControlSocket socketServer : webSocketSet) {
             try {
-                //synchronized (session) {
+                synchronized (session) {
                 socketServer.session.getBasicRemote().sendText(message);
-                //}
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

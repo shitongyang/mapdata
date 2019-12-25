@@ -12,8 +12,4 @@
     <select id="getLocationByName" resultType="java.util.Map">
         SELECT lng,lat FROM st_location WHERE st_name = #{name}
     </select>
-
-    <select id="getBoRuo" resultType="java.util.Map">
-        select a.name,a.before from margin a where area =#{area} and a.before is not null
-    </select>
 </mapper>

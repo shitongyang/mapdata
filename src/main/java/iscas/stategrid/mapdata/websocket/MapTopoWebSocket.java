@@ -28,7 +28,7 @@ public class MapTopoWebSocket {
      */
     private Session session;
 
-    private  String str="";
+    private static volatile String str="";
     //保存前端传过来的值
     private static MyThread1 a=null;
 
@@ -47,7 +47,7 @@ public class MapTopoWebSocket {
         this.session = session;
         System.out.println(session.getId());
         webSocketSet.add(this);
-        System.out.println("区域Socket连接成功");
+        System.out.println("地图Socket连接成功");
     }
 
     /**
@@ -56,7 +56,7 @@ public class MapTopoWebSocket {
     @OnClose
     public void onClose() {
         webSocketSet.remove(this);
-        System.out.println("区域Socket连接关闭");
+        System.out.println("地图Socket连接关闭");
         if(a!=null){
           a.stop();
         }
@@ -70,7 +70,7 @@ public class MapTopoWebSocket {
      */
     @OnMessage
     public  void onMessage(String message) {
-        System.out.println("WS的socket传过来的参数是"+message);
+        System.out.println("地图_的socket传过来的参数是"+message);
         if(str=="") {
             str = message;
             a= new MyThread1(message);
@@ -201,9 +201,9 @@ public class MapTopoWebSocket {
     public  void  sendMessage(String message) {
        for (MapTopoWebSocket socketServer : webSocketSet) {
             try {
-               // synchronized (session) {
+                synchronized (session) {
                 socketServer.session.getBasicRemote().sendText(message);
-                //}
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

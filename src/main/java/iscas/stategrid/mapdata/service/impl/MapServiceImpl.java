@@ -92,7 +92,6 @@ public class MapServiceImpl implements MapService {
                 return list;
             }
             else if(StaticResource.PROVINCE_Set.contains(quyu)){
-                System.out.println("province:"+quyu);
                 List<Map<String, Object>> list=locationEntitymapper.selectProvinceTopoLocation(quyu,"500kv");
                 if(list==null||list.size()==0){
                     list=locationEntitymapper.selectProvinceTopoLocation(quyu,"330kv");
