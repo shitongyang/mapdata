@@ -9,7 +9,6 @@ import iscas.stategrid.mapdata.util.StaticResource;
 import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
 import iscas.stategrid.mapdata.websocket.VoiceSocket;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -177,6 +176,9 @@ public class VoiceServiceImpl implements VoiceService {
             try {
                 Thread.sleep(1500);
                 voice_map.put("type","2");
+                if("1".equals(parameter)){
+
+                }
                 voice_map.put("voice",url+"华中地区在此故障下稳定的概率是");
                 voiceSocket.sendMessage(JSON.toJSONString(voice_map));
                 Thread.sleep(3000);
@@ -220,7 +222,7 @@ public class VoiceServiceImpl implements VoiceService {
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
         }else if("07".equals(commandType)){
             /*
-            * 进入锦州风电机组
+            * 进入哈尔滨风电机组
             * */
         }else if("08".equals(commandType)){
             //xx站的电压是多少

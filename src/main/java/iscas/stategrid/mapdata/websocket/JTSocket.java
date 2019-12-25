@@ -36,6 +36,7 @@ public class JTSocket {
     public void onOpen(Session session) {
         this.session = session;
         webSocketSet.add(this);
+        System.out.println("东北项目连接");
     }
 
     /**
