@@ -13,6 +13,7 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,7 +106,7 @@ public class MapTopoWebSocket {
                 List<Map<String, Object>> topo_Line_info = mapService.getTopoLine(name);
                 List<Map<String, Object>> topo_Location_info = mapService.getTopoLocation(name);
                 Map<String,Object> result = resultMap(topo_Line_info, topo_Location_info, name);
-                System.out.println("在run方法中进来的参数是:" + name);
+                System.out.println("在地图_run方法中进来的参数是:" + name);
                 JSONObject object=JSONObject.parseObject(name);
                 String quyu=object.getString("area");
                 String isStatic=object.getString("JZStatus");
@@ -170,6 +171,17 @@ public class MapTopoWebSocket {
                     result.put("badLine",badLineList);
                     result.put("hide","true");
                 }
+                else if(quyu.equals("全国")&&isStatic.equals("3")){
+                    System.out.println("已经进入全国薄弱点");
+                    result.remove("china_tpLine");
+                    result.remove("china_tpLocation");
+                    System.out.println(result.toString());
+                    String globalWeak=object.getString("china_tpLocation");
+                    List listTypes=JSONObject.parseArray(globalWeak);
+                    List<Map<String,Object>> globalWeakList=listTypes;
+                    result.put("china_tpLocation",globalWeakList);
+                    System.out.println(result.toString());
+                }
                 sendMessage(JSON.toJSONString(result));
                 try {
                     if("2".equals(isStatic)){
@@ -201,9 +213,9 @@ public class MapTopoWebSocket {
     public  void  sendMessage(String message) {
        for (MapTopoWebSocket socketServer : webSocketSet) {
             try {
-                synchronized (session) {
+                //synchronized (session) {
                 socketServer.session.getBasicRemote().sendText(message);
-                }
+                //}
             } catch (IOException e) {
                 e.printStackTrace();
             }
