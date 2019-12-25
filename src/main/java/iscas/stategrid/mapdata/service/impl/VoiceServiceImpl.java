@@ -191,9 +191,48 @@ public class VoiceServiceImpl implements VoiceService {
             message = "success";
         }else if("06".equals(commandType)){
             /*
-            * 根据调控策略进行调控
-            * 过了十秒传输柱子的信息，薄弱节点柱子有明显升高
+             * 根据调控策略进行调控
+             * 过了七秒传输柱子的信息，薄弱节点柱子有明显升高
+             * */
+            voice_map.put("type","2");
+            voice_map.put("voice",url+"正在调控");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            try {
+                Thread.sleep(7000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Map<String,Object> message_map = new HashMap<>();
+            List<Map<String,String>> list = voiceDao.getWeak();
+            List<Map<String,String>> china_tpLocation = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                Map<String,String> map = list.get(i);
+                map.put("height",String.valueOf((int) (Math.random() * (35 - 25) + 25)));
+                china_tpLocation.add(map);
+            }
+            message_map.put("area","全国");
+            message_map.put("JZStatus","3");
+            message_map.put("vlevel","");
+            message_map.put("china_tpLocation",china_tpLocation);
+            mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
+            voice_map.put("type","2");
+            voice_map.put("voice",url+"调控策略已生效，薄弱点裕度有明显提高");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+        }else if("07".equals(commandType)){
+            /*
+            * 进入锦州风电机组
             * */
+        }else if("08".equals(commandType)){
+            //xx站的电压是多少
+            Map<String,String> map = voiceDao.getLocationByName("%"+parameter);
+            int type = Integer.parseInt(map.get("type").substring(0,map.get("type").indexOf("k")));
+            double d = ((int) (Math.random() * (10 - 1) + 1)) * 0.01;
+            map.put("value",String.valueOf(type-(type*0.05)*d)+"kv");
+            voice_map.put("type","4");
+            voice_map.put("data",JSON.toJSONString(map));
+            voice_map.put("voice",url+parameter+"的电压是"+String.valueOf(map.get("value")));
+        }else if("09".equals(commandType)){
+            //展示薄弱节点
             Map<String,Object> message_map = new HashMap<>();
             List<Map<String,String>> list = voiceDao.getWeak();
             List<Map<String,String>> china_tpLocation = new ArrayList<>();
@@ -207,38 +246,6 @@ public class VoiceServiceImpl implements VoiceService {
             message_map.put("vlevel","");
             message_map.put("china_tpLocation",china_tpLocation);
             mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
-            voice_map.put("type","2");
-            voice_map.put("voice",url+"调控策略已注入");
-            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
-            try {
-                Thread.sleep(7000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            for (int i = 0; i < list.size(); i++) {
-                Map<String,String> map = list.get(i);
-                map.put("height",String.valueOf((int) (Math.random() * (35 - 25) + 25)));
-                china_tpLocation.add(map);
-            }
-            message_map.put("china_tpLocation",china_tpLocation);
-            mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
-            voice_map.put("type","2");
-            voice_map.put("voice",url+"调控策略已注入");
-            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
-        }else if("07".equals(commandType)){
-            /*
-            * 进入锦州风电机组
-            * */
-        }else if("08".equals(commandType)){
-            Map<String,String> map = voiceDao.getLocationByName("%"+parameter);
-            int type = Integer.parseInt(map.get("type").substring(0,map.get("type").indexOf("k")));
-            double d = ((int) (Math.random() * (10 - 1) + 1)) * 0.01;
-            map.put("value",String.valueOf(type-(type*0.05)*d)+"kv");
-            voice_map.put("type","4");
-            voice_map.put("data",JSON.toJSONString(map));
-            voice_map.put("voice",url+parameter+"的电压是"+String.valueOf(map.get("value")));
-        }else if("09".equals(commandType)){
-            //展示薄弱节点
         }else if("0A".equals(commandType)){
             voice_map.put("type","3");
             voice_map.put("name","模型测辨");
@@ -253,6 +260,14 @@ public class VoiceServiceImpl implements VoiceService {
             //切换到综合分析界面
         }else if("0D".equals(commandType)){
             //展示潮流数据
+            Map<String,Object> message_map = new HashMap<>();
+            message_map.put("area","全国");
+            message_map.put("JZStatus","1");
+            message_map.put("vlevel","");
+            mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
+            voice_map.put("type","2");
+            voice_map.put("voice",url+"已为您展示潮流数据");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
         }
         return message;
     }

@@ -26,6 +26,7 @@ public class JTSchedule {
     private int count = 0;
     @Scheduled(fixedRate=2000)
     public void doThing(){
+        Map<String,Object> data_map = new HashMap<>();
         FileClient fileClient = new FileClient();
         List<String> A_x = fileClient.getContent("/jar/db/1-x.txt");
         List<String> A_y = fileClient.getContent("/jar/db/1-y.txt");
@@ -43,11 +44,14 @@ public class JTSchedule {
         A_point.put("point",A_y.get(count).split(",")[A_x.get(count).split(",").length-1]);
         A_map.put("line",A_line);
         A_map.put("point",A_point);
+        data_map.put("line1",A_map);
         //第二条线
+        //柱子
+
 //        List<String> B_x = fileClient.getContent("/jar/db/2-x.txt");
 //        List<String> B_y1 = fileClient.getContent("/jar/db/2-y1.txt");
 //        List<String> B_y2 = fileClient.getContent("/jar/db/2-y2.txt");
-        jtSocket.sendMessage(JSON.toJSONString(A_map));
+        jtSocket.sendMessage(JSON.toJSONString(data_map));
         count = count+1;
         if(count==5){
             count = 0 ;
