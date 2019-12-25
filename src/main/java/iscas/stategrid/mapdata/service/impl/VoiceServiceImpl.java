@@ -9,6 +9,7 @@ import iscas.stategrid.mapdata.util.StaticResource;
 import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
 import iscas.stategrid.mapdata.websocket.VoiceSocket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,40 +35,49 @@ public class VoiceServiceImpl implements VoiceService {
     @Autowired
     private LocationMapper stLocationEntityMapper;
     @Autowired
-    private KongJService jcInfoService;
+    private KongJService kongJService;
     private List<Map<String,String>> info;
     private boolean isControl = false;
     @Override
     public String queryCommand(String commandType, String area) {
-        String message = "查询成功";
+        String message = "查询失败";
         Map<String, String> voice_map = new HashMap<>();
         String type = "2";
         String msg = "";
         String url = "http://192.168.101.80:8100/tts?access_token=speech&language=zh&domain=1&voice_name=静静&text=";
         if (commandType.equals("01")) {
-            String index = jcInfoService.getIndexByFlag("1");
+            String index = kongJService.getIndexByFlag("1");
+            message = "查询成功";
             msg = url + "当前电网安全性指标是" + index;
         } else if (commandType.equals("02")) {
-            String index = jcInfoService.getIndexByFlag("2");
+            String index = kongJService.getIndexByFlag("2");
             msg = url + "当前电网经济性指标是" + index;
+            message = "查询成功";
         } else if (commandType.equals("03")) {
-            String index = jcInfoService.getIndexByFlag("3");
+            String index = kongJService.getIndexByFlag("3");
             msg = url + "当前电网综合评估指标是" + index;
+            message = "查询成功";
         } else if (commandType.equals("04")) {
-            String index = jcInfoService.getIndexByFlag("4");
+            String index = kongJService.getIndexByFlag("4");
             msg = url + "当前电网静态安全指标是" + index;
+            message = "查询成功";
         } else if (commandType.equals("05")) {
-            String index = jcInfoService.getIndexByFlag("5");
+            String index = kongJService.getIndexByFlag("5");
             msg = url + "当前电网暂态安全指标是" + index;
+            message = "查询成功";
         } else if (commandType.equals("06")) {
-            String police = jcInfoService.getPoliceInfo();
-            msg = url + "当前电网的调控策略有：" + police;
-        } else if (commandType.equals("07")) {
 
+        } else if (commandType.equals("07")) {
+            String hz = kongJService.getModelByArea(area,"hz");
+            if (hz.equals("")) {
+                msg = url + "没有查到相关信息";
+            } else {
+                msg = url + area + "地区的振荡频率是" + hz;
+                message = "查询成功";
+            }
         } else if (commandType.equals("08")) {
-            String percent = jcInfoService.getZNByArea(area);
+            String percent = kongJService.getModelByArea(area,"percent");
             if (percent.equals("")) {
-                message = "查询失败";
                 msg = url + "没有查到相关信息";
             } else {
                 msg = url + area + "地区的阻尼比是" + percent;
@@ -180,11 +190,55 @@ public class VoiceServiceImpl implements VoiceService {
             mapTopoWebSocket.onMessage(JSON.toJSONString(ZC_map));
             message = "success";
         }else if("06".equals(commandType)){
+            /*
+            * 根据调控策略进行调控
+            * 过了十秒传输柱子的信息，薄弱节点柱子有明显升高
+            * */
+            Map<String,Object> message_map = new HashMap<>();
+            List<Map<String,String>> list = voiceDao.getWeak();
+            List<Map<String,String>> china_tpLocation = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                Map<String,String> map = list.get(i);
+                map.put("height",String.valueOf((int) (Math.random() * (25 - 15) + 15)));
+                china_tpLocation.add(map);
+            }
+            message_map.put("area","全国");
+            message_map.put("JZStatus","3");
+            message_map.put("vlevel","");
+            message_map.put("china_tpLocation",china_tpLocation);
+            mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
             voice_map.put("type","2");
-            //传输调控后裕度信息
-            isControl = true;
             voice_map.put("voice",url+"调控策略已注入");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            try {
+                Thread.sleep(7000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            for (int i = 0; i < list.size(); i++) {
+                Map<String,String> map = list.get(i);
+                map.put("height",String.valueOf((int) (Math.random() * (35 - 25) + 25)));
+                china_tpLocation.add(map);
+            }
+            message_map.put("china_tpLocation",china_tpLocation);
+            mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
+            voice_map.put("type","2");
+            voice_map.put("voice",url+"调控策略已注入");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+        }else if("07".equals(commandType)){
+            /*
+            * 进入锦州风电机组
+            * */
+        }else if("08".equals(commandType)){
+            Map<String,String> map = voiceDao.getLocationByName("%"+parameter);
+            int type = Integer.parseInt(map.get("type").substring(0,map.get("type").indexOf("k")));
+            double d = ((int) (Math.random() * (10 - 1) + 1)) * 0.01;
+            map.put("value",String.valueOf(type-(type*0.05)*d)+"kv");
+            voice_map.put("type","4");
+            voice_map.put("data",JSON.toJSONString(map));
+            voice_map.put("voice",url+parameter+"的电压是"+String.valueOf(map.get("value")));
+        }else if("09".equals(commandType)){
+            //展示薄弱节点
         }else if("0A".equals(commandType)){
             voice_map.put("type","3");
             voice_map.put("name","模型测辨");
@@ -195,6 +249,10 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("name","平台监控");
             voice_map.put("voice",url+"已为您切换到大数据平台监控界面");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+        }else if("0C".equals(commandType)){
+            //切换到综合分析界面
+        }else if("0D".equals(commandType)){
+            //展示潮流数据
         }
         return message;
     }

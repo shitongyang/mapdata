@@ -96,9 +96,9 @@ public class KongJServiceImpl implements KongJService {
         if(flag.equals("1")){
             index = "百分之"+index_1;
         }else if(flag.equals("2")){
-            index = "百分之"+index_3;
-        }else if(flag.equals("3")){
             index = "百分之"+index_2;
+        }else if(flag.equals("3")){
+            index = "百分之"+index_3;
         }else if(flag.equals("4")){
             index = "百分之"+index_4;
         }else {
@@ -147,39 +147,38 @@ public class KongJServiceImpl implements KongJService {
     }
 
     @Override
-    public String getHZByArea(String area) {
-        String message = "";
-        for (int i = 0; i <area_info.size() ; i++) {
-            Map<String,String> map = area_info.get(i);
-            System.out.println(area);
-            if(map.get("name").equals(area)){
-                message = map.get("hz");
+    public String getModelByArea(String area,String type) {
+        String rootPath = "/jar/lkb/";
+        FileClient fileClient = new FileClient();
+        String flag = "";
+            if ("华北".equals(area)) {
+                flag = "0/";
+            } else if ("华东".equals(area)) {
+                flag = "1/";
+            } else if ("华中".equals(area)) {
+                flag = "2/";
+            } else if ("东北".equals(area)) {
+                flag = "3/";
+            } else if ("西北".equals(area)) {
+                flag = "4/";
+            } else if ("西南".equals(area)) {
+                flag = "5/";
+            }
+            String filePath = rootPath+flag+String.valueOf(2)+".txt";
+            List<String> content = fileClient.getContent(filePath);
+            String str_hz = content.get(1).split(",")[1];
+            String str_percent = content.get(1).split(",")[0];
+            double percent = Double.parseDouble(str_percent)*100;
+            double hz = Double.parseDouble(str_hz);
+            NumberFormat Nformat = NumberFormat.getInstance();
+            // 设置小数位数。
+            Nformat.setMaximumFractionDigits(2);
+            if("hz".equals(type)){
+                return Nformat.format(hz);
+            }else {
+                return Nformat.format(percent)+"%";
             }
         }
-        return message;
-    }
-
-    @Override
-    public String getZNByArea(String area) {
-        String message = "";
-        for (int i = 0; i <area_info.size() ; i++) {
-            Map<String,String> map = area_info.get(i);
-            if(map.get("name").equals(area)){
-                message = map.get("percent");
-            }
-        }
-        return message;
-    }
-
-    @Override
-    public String getPoliceInfo() {
-        String police = "";
-        for (int i = 0; i <data2_list.size() ; i++) {
-            Map<String,String> map = data2_list.get(i);
-            police = police+map.get("station_name")+map.get("FDJ_name")+"调控量"+map.get("Police")+";";
-        }
-        return police;
-    }
 
     @Override
     public List<Map<String, String>>getImIndex(String area,String isStatic) {
