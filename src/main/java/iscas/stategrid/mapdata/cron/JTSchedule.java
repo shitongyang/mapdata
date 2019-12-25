@@ -39,8 +39,8 @@ public class JTSchedule {
             map.put("y",A_y.get(count).split(",")[i]);
             A_line.add(map);
         }
-        A_point.put("x",A_x.get(count).split(",")[A_x.get(count).split(",").length]);
-        A_point.put("point",A_y.get(count).split(",")[A_x.get(count).split(",").length]);
+        A_point.put("x",A_x.get(count).split(",")[A_x.get(count).split(",").length-1]);
+        A_point.put("point",A_y.get(count).split(",")[A_x.get(count).split(",").length-1]);
         A_map.put("line",A_line);
         A_map.put("point",A_point);
         //第二条线
