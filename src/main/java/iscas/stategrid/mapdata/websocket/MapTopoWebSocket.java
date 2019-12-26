@@ -175,11 +175,11 @@ public class MapTopoWebSocket {
                     System.out.println("已经进入全国薄弱点");
                     result.remove("china_tpLine");
                     result.remove("china_tpLocation");
-                    System.out.println(result.toString());
-                    String globalWeak=object.getString("china_tpLocation");
+//                    System.out.println(result.toString());
+                    String globalWeak=object.getString("weak_Location");
                     List listTypes=JSONObject.parseArray(globalWeak);
                     List<Map<String,Object>> globalWeakList=listTypes;
-                    result.put("china_tpLocation",globalWeakList);
+                    result.put("weak_Location",globalWeakList);
                     System.out.println(result.toString());
                 }
                 sendMessage(JSON.toJSONString(result));

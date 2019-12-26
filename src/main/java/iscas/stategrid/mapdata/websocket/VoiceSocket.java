@@ -74,9 +74,9 @@ public class VoiceSocket {
     public void sendMessage(String message) {
         for (VoiceSocket socketServer : webSocketSet) {
             try {
-                synchronized (session) {
+                //synchronized (session) {
                 socketServer.session.getBasicRemote().sendText(message);
-                }
+                //}
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -16,15 +16,16 @@ public class VoiceController {
     private VoiceService voiceService;
     @RequestMapping(value = "querycommand",method = RequestMethod.POST)
     public String queryCommand(@RequestParam String commandtype, @RequestParam(defaultValue = "null") String area){
-        //String message = voiceService.queryCommand(commandtype,area);
-        String message = "lvcommandtype:"+commandtype+" area:"+area;
+        String message = voiceService.queryCommand(commandtype,area);
+        //String message = "lvcommandtype:"+commandtype+" area:"+area;
         return message;
     }
     @RequestMapping(value = "operate",method = RequestMethod.POST)
     public String operate(@RequestParam String operationtype, @RequestParam(defaultValue = "null") String parameter){
-        //String message = voiceService.operate(operationtype,parameter);
+        System.out.println("operationtype:"+operationtype+" parameter:"+parameter);
+        String message = voiceService.operate(operationtype,parameter);
         //voiceService.operate(operationtype,parameter);
-        String message = "lvoperationtype:"+operationtype+" parameter:"+parameter;
+        //String message = "lvoperationtype:"+operationtype+" parameter:"+parameter;
         return message;
     }
 }

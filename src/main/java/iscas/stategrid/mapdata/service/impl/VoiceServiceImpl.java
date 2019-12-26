@@ -84,7 +84,7 @@ public class VoiceServiceImpl implements VoiceService {
             }
         }
         voice_map.put("type", type);
-        voice_map.put("message", msg);
+        voice_map.put("voice", msg);
         voiceSocket.sendMessage(JSON.toJSONString(voice_map));
         return message;
     }
@@ -177,7 +177,6 @@ public class VoiceServiceImpl implements VoiceService {
                 Thread.sleep(1500);
                 voice_map.put("type","2");
                 if("1".equals(parameter)){
-
                 }
                 voice_map.put("voice",url+"华中地区在此故障下稳定的概率是");
                 voiceSocket.sendMessage(JSON.toJSONString(voice_map));
@@ -206,16 +205,17 @@ public class VoiceServiceImpl implements VoiceService {
             }
             Map<String,Object> message_map = new HashMap<>();
             List<Map<String,String>> list = voiceDao.getWeak();
-            List<Map<String,String>> china_tpLocation = new ArrayList<>();
+            List<Map<String,String>> weak_Location = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 Map<String,String> map = list.get(i);
                 map.put("height",String.valueOf((int) (Math.random() * (35 - 25) + 25)));
-                china_tpLocation.add(map);
+                map.put("color","green");
+                weak_Location.add(map);
             }
             message_map.put("area","全国");
             message_map.put("JZStatus","3");
             message_map.put("vlevel","");
-            message_map.put("china_tpLocation",china_tpLocation);
+            message_map.put("weak_Location",weak_Location);
             mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
             voice_map.put("type","2");
             voice_map.put("voice",url+"调控策略已生效，薄弱点裕度有明显提高");
@@ -241,12 +241,13 @@ public class VoiceServiceImpl implements VoiceService {
             for (int i = 0; i < list.size(); i++) {
                 Map<String,String> map = list.get(i);
                 map.put("height",String.valueOf((int) (Math.random() * (25 - 15) + 15)));
+                map.put("color","red");
                 china_tpLocation.add(map);
             }
             message_map.put("area","全国");
             message_map.put("JZStatus","3");
             message_map.put("vlevel","");
-            message_map.put("china_tpLocation",china_tpLocation);
+            message_map.put("weak_Location",china_tpLocation);
             mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
         }else if("0A".equals(commandType)){
             voice_map.put("type","3");
