@@ -8,6 +8,7 @@ import iscas.stategrid.mapdata.util.FileClient;
 import iscas.stategrid.mapdata.util.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -514,7 +515,7 @@ public class KongJServiceImpl implements KongJService {
 
     }
 
-    public Map<String, Object> getKongJInfo2(String area) {
+    public Map<String, Object> getKongJInfo2(String area,String model) {
         //模拟态
         Map<String,Object> resultData =new HashMap<>();
         if("全国".equals(area)){
@@ -550,8 +551,8 @@ public class KongJServiceImpl implements KongJService {
         resultData.put("data0",getIndex());
         resultData.put("data3",getControlPolice());
         //获取设备调控策略
-        resultData.put("data8","");
-        resultData.put("data9","");
+        resultData.put("data8",getDeviceMotaiInfo(area,model));
+        resultData.put("data9",getAreaZDandZN(area));
         resultData.put("data10","");
         return resultData;
     }
@@ -572,7 +573,7 @@ public class KongJServiceImpl implements KongJService {
         }
         else if("2".equals(type)){
             //模拟态
-            return getKongJInfo2(area);
+            return getKongJInfo2(area,model);
         }
         return errorResult(area).get(0);
     }
