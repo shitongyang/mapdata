@@ -2,12 +2,16 @@ package iscas.stategrid.mapdata.websocket;
 
 import com.alibaba.fastjson.JSON;
 import iscas.stategrid.mapdata.service.KongJService;
+import iscas.stategrid.mapdata.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -20,6 +24,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Controller
 public class ControlSocket {
     private static KongJService KongJService;
+
+    private static MapService mapService;
     /**
      * session 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
@@ -32,6 +38,10 @@ public class ControlSocket {
      * webSocketSet concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象
      */
     private static CopyOnWriteArraySet<ControlSocket> webSocketSet = new CopyOnWriteArraySet();
+    @Autowired
+    public void setMapService(MapService mapService) {
+        ControlSocket.mapService = mapService;
+    }
     @Autowired
     public void setJCInfoService(KongJService jcInfoService) {
         ControlSocket.KongJService = jcInfoService;
@@ -130,7 +140,17 @@ public class ControlSocket {
         public void run()
         {
             while(isRun) {
+                List<Map<String, Object>> topo_Line_info = mapService.getTopoLine(name);
+                Map<String,Object> data6=new HashMap<>();
+                //
+                data6.put("left1",topo_Line_info.size());
+                data6.put("left2",(int)(Math.random()*10)+20);
+                data6.put("right1",(int)(Math.random()*2)+5);
+                //Calendar calendar=Calendar.getInstance();
+                //int currentHour24=calendar.get(calendar.HOUR_OF_DAY);
+                data6.put("right2",(int)(Math.random()*8)+1+"h");
                 Map<String,Object> area_info = KongJService.getKongJInfo(name);
+                area_info.put("data6",data6);
                 sendMessage(JSON.toJSONString(area_info));
                 try {
                     Thread.sleep(8000);
