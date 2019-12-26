@@ -173,22 +173,23 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("type","2");
             voice_map.put("voice",url+"第"+parameter+"类故障设置成功");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            String rate = "";
             try {
                 Thread.sleep(1500);
                 voice_map.put("type","2");
                 if("1".equals(parameter)){
+                    rate =  "0.56";
+                }else if("2".equals(parameter)){
+                    rate =  "0.43";
+                }else {
+                    rate =  "0.29";
                 }
-                voice_map.put("voice",url+"华中地区在此故障下稳定的概率是");
+                voice_map.put("voice",url+"华中地区在此故障下稳定的概率是百分之"+rate);
                 voiceSocket.sendMessage(JSON.toJSONString(voice_map));
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Map<String,String> ZC_map = new HashMap<>();
-            ZC_map.put("area","华中");
-            ZC_map.put("JZStatus","1");
-            ZC_map.put("vlevel","");
-            mapTopoWebSocket.onMessage(JSON.toJSONString(ZC_map));
             message = "success";
         }else if("06".equals(commandType)){
             /*
@@ -220,6 +221,7 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("type","2");
             voice_map.put("voice",url+"调控策略已生效，薄弱点裕度有明显提高");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            message = "success";
         }else if("07".equals(commandType)){
             /*
             * 进入哈尔滨风电机组
@@ -233,6 +235,7 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("type","4");
             voice_map.put("data",JSON.toJSONString(map));
             voice_map.put("voice",url+parameter+"的电压是"+String.valueOf(map.get("value")));
+            message = "success";
         }else if("09".equals(commandType)){
             //展示薄弱节点
             Map<String,Object> message_map = new HashMap<>();
@@ -249,6 +252,10 @@ public class VoiceServiceImpl implements VoiceService {
             message_map.put("vlevel","");
             message_map.put("weak_Location",china_tpLocation);
             mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
+            voice_map.put("type","2");
+            voice_map.put("voice",url+"已为您展示薄弱节点信息");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            message = "success";
         }else if("0A".equals(commandType)){
             voice_map.put("type","3");
             voice_map.put("name","模型测辨");

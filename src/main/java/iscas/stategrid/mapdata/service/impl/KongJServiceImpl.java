@@ -411,7 +411,6 @@ public class KongJServiceImpl implements KongJService {
         //模拟态->区域
         //获取预想故障下区域信息
         List<Map<String,Object>> list = new ArrayList<>();
-
         List<String> locationList=new ArrayList<>();
         locationList.add("国调峡葛III线");
         locationList.add("华中 南香I回线");

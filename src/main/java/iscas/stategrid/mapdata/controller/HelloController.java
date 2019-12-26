@@ -12,10 +12,6 @@ public class HelloController {
 
     @Autowired
     private MapService mapService;
-    @RequestMapping(value="/get",method = RequestMethod.GET)
-    public String get(){
-        return "hello zhangli";
-    }
 
     @RequestMapping(value="/getLocation",method = RequestMethod.GET)
     public String getLocation(@RequestParam("location") String location){

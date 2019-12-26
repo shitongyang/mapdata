@@ -12,7 +12,6 @@ import java.util.Map;
 public class WinPositionController {
     @Autowired
     private WinPositionService winPositionService;
-
     //全国风电机组的位置
     @RequestMapping(value = "getWP.json",method = RequestMethod.GET)
     public List<Map<String,String>> getWP(){
