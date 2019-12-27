@@ -8,3 +8,5 @@ ControlSocket是控件的socket
 VoiceSocket是语音的socket
 
 控件的刷新频率是一分钟一次，地图的刷新是5秒和1秒
+
+控件和地图的websocket需要传参数返回数据，其他websocket不需要传参，连上就可以接收到数据。

@@ -3,7 +3,6 @@ import com.alibaba.fastjson.JSONObject;
 import iscas.stategrid.mapdata.mapper.KongJianMapper;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
-import iscas.stategrid.mapdata.service.MapService;
 import iscas.stategrid.mapdata.util.FileClient;
 import iscas.stategrid.mapdata.util.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -40,7 +40,6 @@ public class MapTopoWebSocket {
 
     @Autowired
     public void setdc_lineService(MapService mapService) {
-
         MapTopoWebSocket.mapService = mapService;
     }
     @OnOpen
@@ -72,6 +71,13 @@ public class MapTopoWebSocket {
     @OnMessage
     public  void onMessage(String message) {
         System.out.println("地图_的socket传过来的参数是"+message);
+        try {
+            JSONObject object = JSONObject.parseObject(message);
+        }catch (Exception e){
+            sendMessage(JSONObject.toJSONString(StaticResource.jsonErrorResult(message)));
+            System.out.println("前端传过来的参数不符合json格式");
+            return;
+        }
         if(str=="") {
             str = message;
             a= new MyThread1(message);
@@ -103,11 +109,12 @@ public class MapTopoWebSocket {
         public void run()
         {
             while(isRun) {
+                System.out.println("在地图_run方法中进来的参数是:" + name);
+                JSONObject object=JSONObject.parseObject(name);
                 List<Map<String, Object>> topo_Line_info = mapService.getTopoLine(name);
                 List<Map<String, Object>> topo_Location_info = mapService.getTopoLocation(name);
                 Map<String,Object> result = resultMap(topo_Line_info, topo_Location_info, name);
-                System.out.println("在地图_run方法中进来的参数是:" + name);
-                JSONObject object=JSONObject.parseObject(name);
+
                 String quyu=object.getString("area");
                 String isStatic=object.getString("JZStatus");
                 result.put("hide","false");

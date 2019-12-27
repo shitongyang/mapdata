@@ -14,4 +14,5 @@ public interface MapService {
     List<Map<String,Object>> getTopoLine(String area);
     List<Map<String,Object>> getTopoLocation(String area);
     List<Map<String,Object>> getLocation(String area);
+    List<Map<String,String>> getWeakLocation(String area);
 }

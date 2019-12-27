@@ -13,6 +13,6 @@
         SELECT lng,lat FROM st_location WHERE st_name = #{name}
     </select>
     <select id="getWeak" resultType="java.util.Map">
-        SELECT * FROM st_location WHERE st_name in (SELECT `name` FROM margin WHERE area = '全国')
+        SELECT lng,lat,st_name FROM st_location WHERE st_name in (SELECT `name` FROM margin WHERE area =#{area})
     </select>
 </mapper>

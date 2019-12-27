@@ -18,5 +18,10 @@ public class HelloController {
         return JSON.toJSONString(mapService.getLocation(location));
     }
 
+    @RequestMapping(value="/getWeakLocation",method = RequestMethod.GET)
+    public String getWeakLocation(@RequestParam("weakLocation") String weakLocation){
+        return JSON.toJSONString(mapService.getWeakLocation(weakLocation));
+    }
+
 
 }

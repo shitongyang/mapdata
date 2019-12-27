@@ -1,8 +1,10 @@
 package iscas.stategrid.mapdata.websocket;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.MapService;
+import iscas.stategrid.mapdata.util.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -79,6 +81,13 @@ public class ControlSocket {
     @OnMessage
     public void onMessage(String message) {
         System.out.println("控件_的socket传来的参数是"+message);
+        try {
+            JSONObject object = JSONObject.parseObject(message);
+        }catch (Exception e){
+            sendMessage(JSONObject.toJSONString(StaticResource.jsonErrorResult(message)));
+            System.out.println("前端传过来的参数不符合json格式");
+            return;
+        }
         if(str=="") {
             str = message;
             a= new MyThread1(message);

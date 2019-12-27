@@ -205,7 +205,7 @@ public class VoiceServiceImpl implements VoiceService {
                 e.printStackTrace();
             }
             Map<String,Object> message_map = new HashMap<>();
-            List<Map<String,String>> list = voiceDao.getWeak();
+            List<Map<String,String>> list = voiceDao.getWeak("全国");
             List<Map<String,String>> weak_Location = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 Map<String,String> map = list.get(i);
@@ -239,7 +239,7 @@ public class VoiceServiceImpl implements VoiceService {
         }else if("09".equals(commandType)){
             //展示薄弱节点
             Map<String,Object> message_map = new HashMap<>();
-            List<Map<String,String>> list = voiceDao.getWeak();
+            List<Map<String,String>> list = voiceDao.getWeak("全国");
             List<Map<String,String>> china_tpLocation = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 Map<String,String> map = list.get(i);

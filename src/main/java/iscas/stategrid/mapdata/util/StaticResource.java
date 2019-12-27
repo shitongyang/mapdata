@@ -1,5 +1,7 @@
 package iscas.stategrid.mapdata.util;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.*;
 
 public class StaticResource {
@@ -336,11 +338,18 @@ public class StaticResource {
     public static List<Map<String,Object>> errorResult(String area){
 
         HashMap<String,Object> map=new HashMap<>();
-        map.put("message","parameter is wrong!");
-        map.put("your input is",area);
+        map.put("描述:","参数错误");
+        map.put("你输入的参数是:",area);
         List<Map<String,Object>> list=new ArrayList<>();
         list.add(map);
         return list;
+    }
+    public static Map<String,Object> jsonErrorResult(String area){
+
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("描述:","输入的数据不是json格式的字符串");
+        map.put("你输入的参数是:",area);
+        return map;
     }
     public static void main(String[] args) {
         System.out.println(PROVINCE_Set);

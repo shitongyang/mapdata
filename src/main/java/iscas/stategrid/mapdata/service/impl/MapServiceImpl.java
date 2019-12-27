@@ -1,6 +1,7 @@
 package iscas.stategrid.mapdata.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import iscas.stategrid.mapdata.mapper.VoiceDao;
 import iscas.stategrid.mapdata.service.MapService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.util.StaticResource;
@@ -16,6 +17,8 @@ public class MapServiceImpl implements MapService {
     @Autowired
     private LocationMapper locationEntitymapper;
 
+    @Autowired
+    private VoiceDao voiceDao;
 
     //获得拓扑线路
     @Override
@@ -142,5 +145,10 @@ public class MapServiceImpl implements MapService {
         else{
             return errorResult(area);
         }
+    }
+
+    @Override
+    public List<Map<String, String>> getWeakLocation(String area) {
+        return voiceDao.getWeak(area);
     }
 }
