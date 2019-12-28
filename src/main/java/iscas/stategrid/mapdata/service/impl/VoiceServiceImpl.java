@@ -5,7 +5,7 @@ import iscas.stategrid.mapdata.mapper.VoiceDao;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.VoiceService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
-import iscas.stategrid.mapdata.util.StaticResource;
+import iscas.stategrid.mapdata.Utils.StaticResource;
 import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
 import iscas.stategrid.mapdata.websocket.VoiceSocket;
 import org.springframework.beans.factory.annotation.Autowired;

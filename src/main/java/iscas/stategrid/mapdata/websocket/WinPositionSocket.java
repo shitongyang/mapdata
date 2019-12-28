@@ -1,15 +1,12 @@
 package iscas.stategrid.mapdata.websocket;
 
-import com.alibaba.fastjson.JSON;
+
 import iscas.stategrid.mapdata.service.WinPositionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint("/Win")
@@ -72,7 +69,7 @@ public class WinPositionSocket {
     /**
      * 实现服务器主动推送
      */
-    public void sendMessage(String message) {
+    public synchronized void sendMessage(String message) {
         for (WinPositionSocket socketServer : webSocketSet) {
             try {
                 //synchronized (session) {

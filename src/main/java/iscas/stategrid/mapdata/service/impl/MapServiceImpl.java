@@ -4,12 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import iscas.stategrid.mapdata.mapper.VoiceDao;
 import iscas.stategrid.mapdata.service.MapService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
-import iscas.stategrid.mapdata.util.StaticResource;
+import iscas.stategrid.mapdata.Utils.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
-import static iscas.stategrid.mapdata.util.StaticResource.errorResult;
+import static iscas.stategrid.mapdata.Utils.StaticResource.errorResult;
 
 @Service
 public class MapServiceImpl implements MapService {
@@ -59,7 +59,6 @@ public class MapServiceImpl implements MapService {
             return errorResult(area);
         }
     }
-
 
     //获得拓扑结构中的站点信息
     @Override
@@ -147,6 +146,7 @@ public class MapServiceImpl implements MapService {
         }
     }
 
+    //获取薄弱节点 地图展示
     @Override
     public List<Map<String, String>> getWeakLocation(String area) {
         return voiceDao.getWeak(area);

@@ -4,7 +4,7 @@ package iscas.stategrid.mapdata.cron;
 import com.alibaba.fastjson.JSON;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.service.MapService;
-import iscas.stategrid.mapdata.util.RedisClient;
+import iscas.stategrid.mapdata.Utils.RedisClient;
 import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.Trigger;

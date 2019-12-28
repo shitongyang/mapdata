@@ -48,7 +48,7 @@ public interface KongJService {
       * @auther: lvxianjin
       * @date: 2019/10/28 8:01
       */
- List<Map<String, String>> getAreaInfo();
+ Map<String, Object> getAreaInfo();
  /**
   *
   * 功能描述: 根据地区名称获取振荡频率与阻尼比
@@ -74,5 +74,7 @@ List<Map<String,String>> getImIndex(String area,String isStatic);
  //2019/12/14 14:15
  //yangst
  Map<String,Object> getKongJInfo(String message);
+
+ List<Map<String, String>> getDeviceMotaiInfo(String area,String modelName);
 }
 

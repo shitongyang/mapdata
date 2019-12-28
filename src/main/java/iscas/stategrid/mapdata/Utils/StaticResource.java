@@ -1,6 +1,4 @@
-package iscas.stategrid.mapdata.util;
-
-import com.alibaba.fastjson.JSONObject;
+package iscas.stategrid.mapdata.Utils;
 
 import java.util.*;
 

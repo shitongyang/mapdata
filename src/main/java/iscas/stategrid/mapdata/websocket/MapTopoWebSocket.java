@@ -3,8 +3,7 @@ package iscas.stategrid.mapdata.websocket;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import iscas.stategrid.mapdata.service.MapService;
-import iscas.stategrid.mapdata.util.RedisClient;
-import iscas.stategrid.mapdata.util.StaticResource;
+import iscas.stategrid.mapdata.Utils.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,6 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +29,7 @@ public class MapTopoWebSocket {
 
     private static volatile String str="";
     //保存前端传过来的值
-    private static MyThread1 a=null;
+    private static MyThread a=null;
 
     /**
      * webSocketSet concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象
@@ -60,8 +58,8 @@ public class MapTopoWebSocket {
         if(a!=null){
           a.stop();
         }
-        RedisClient client = new RedisClient();
-        client.setValue("id","全国,1");
+//        RedisClient client = new RedisClient();
+//        client.setValue("id","全国,1");
     }
     /**
      * 收到节点信息
@@ -80,29 +78,24 @@ public class MapTopoWebSocket {
         }
         if(str=="") {
             str = message;
-            a= new MyThread1(message);
+            a= new MyThread(message);
             a.start();
         }
         if(str!=message){
             a.stop();
-            a= new MyThread1(message);
+            a= new MyThread(message);
             a.start();
             str=message;
         }
         //RedisClient client = new RedisClient();
         //client.setValue("id",message);
     }
-    public  class MyThread1 extends Thread
+    public  class MyThread extends Thread
     {
 
         public String name;
-        boolean isStop=true;
-        public void terminate(){
-            this.isStop=false;
-        }
-
         public boolean isRun=true;
-        MyThread1 (String name){
+        MyThread (String name){
             this.name=name;
         }
         @Override
@@ -158,13 +151,9 @@ public class MapTopoWebSocket {
                 else if(StaticResource.AREA_Set.contains(quyu)&&"2".equals(isStatic)){
 
                     System.out.println("已经进入区域暂态");
-                    System.out.println(result);
                     result.remove("area_tpLine");
                     result.remove("area_tpLocation");
-                    List<Map<String,Object>> nullList1=new ArrayList<>();
-                    List<Map<String,Object>> nullList2=new ArrayList<>();
-                    result.put("area_tpLine",nullList1);
-                    result.put("area_tpLocation",nullList2);
+                    System.out.println(result);
                     //把拓扑的站点和线路清空
                     String error_point=object.getString("error_point");
                     Map mapTypes = JSON.parseObject(error_point);
@@ -172,20 +161,18 @@ public class MapTopoWebSocket {
                     badPointList.add(mapTypes);
 
                     String error_line=object.getString("error_line");
-                    List listTypes=JSONObject.parseArray(error_line);
-                    List<Map<String,Object>> badLineList=listTypes;
+                    List badLineList=JSONObject.parseArray(error_line);
                     result.put("badPoint",badPointList);
                     result.put("badLine",badLineList);
                     result.put("hide","true");
+                    System.out.println(result);
                 }
                 else if(quyu.equals("全国")&&isStatic.equals("3")){
                     System.out.println("已经进入全国薄弱点");
                     result.remove("china_tpLine");
                     result.remove("china_tpLocation");
-//                    System.out.println(result.toString());
                     String globalWeak=object.getString("weak_Location");
-                    List listTypes=JSONObject.parseArray(globalWeak);
-                    List<Map<String,Object>> globalWeakList=listTypes;
+                    List globalWeakList=JSONObject.parseArray(globalWeak);
                     result.put("weak_Location",globalWeakList);
                     System.out.println(result.toString());
                 }
@@ -193,9 +180,11 @@ public class MapTopoWebSocket {
                 try {
                     if("2".equals(isStatic)){
                         Thread.sleep(1000);
+                        //暂态一秒传一次
                     }
                     else {
                         Thread.sleep(5000);
+                        //稳态五秒传一次
                     }
 
                 } catch (InterruptedException e) {

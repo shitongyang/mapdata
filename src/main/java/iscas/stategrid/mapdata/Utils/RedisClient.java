@@ -1,4 +1,4 @@
-package iscas.stategrid.mapdata.util;
+package iscas.stategrid.mapdata.Utils;
 
 import redis.clients.jedis.Jedis;
 

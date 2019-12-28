@@ -4,14 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.MapService;
-import iscas.stategrid.mapdata.util.StaticResource;
+import iscas.stategrid.mapdata.Utils.StaticResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,11 +135,6 @@ public class ControlSocket {
     {
 
         public String name;
-        boolean isStop=true;
-        public void terminate(){
-            this.isStop=false;
-        }
-
         public boolean isRun=true;
         MyThread1 (String name){
             this.name=name;

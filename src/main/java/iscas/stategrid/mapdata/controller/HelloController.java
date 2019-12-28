@@ -1,6 +1,7 @@
 package iscas.stategrid.mapdata.controller;
 
 import com.alibaba.fastjson.JSON;
+import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,9 @@ public class HelloController {
     @Autowired
     private MapService mapService;
 
+    @Autowired
+    private KongJService kongJService;
+
     @RequestMapping(value="/getLocation",method = RequestMethod.GET)
     public String getLocation(@RequestParam("location") String location){
         return JSON.toJSONString(mapService.getLocation(location));
@@ -23,5 +27,8 @@ public class HelloController {
         return JSON.toJSONString(mapService.getWeakLocation(weakLocation));
     }
 
-
+    @RequestMapping(value="/getModelInfo",method = RequestMethod.GET)
+    public String getModelInfo(@RequestParam("area") String area,@RequestParam(defaultValue = "模式1") String modelName){
+        return JSON.toJSONString(kongJService.getDeviceMotaiInfo(area,modelName));
+    }
 }
