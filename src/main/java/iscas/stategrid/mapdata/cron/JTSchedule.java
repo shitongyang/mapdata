@@ -24,6 +24,7 @@ public class JTSchedule {
     @Autowired
     private JTSocket jtSocket;
     private int count = 0;
+    String names[] = {"河南.荥阳电厂","湖南.水湾站","湖北.汾阳站","河南.栾川站","湖南.胡家坪站"};
     @Scheduled(fixedRate=2000)
     public void doThing(){
         Map<String,Object> data_map = new HashMap<>();
@@ -34,7 +35,6 @@ public class JTSchedule {
         Map<String,String> A_point = new HashMap<>();
         Map<String,Object> A_map = new HashMap<>();
         Map<String,Object> B_map = new HashMap<>();
-        Map<String,Object> bar_map = new HashMap<>();
         for (int i = 0; i < A_x.get(count).split(",").length; i=i+2) {
             Map<String,String> map = new HashMap<>();
             map.put("x",A_x.get(count).split(",")[i].substring(0,A_x.get(count).split(",")[i].indexOf(".")+4));
@@ -45,6 +45,8 @@ public class JTSchedule {
         A_point.put("point",A_y.get(count).split(",")[A_x.get(count).split(",").length-1]);
         A_map.put("line",A_line);
         A_map.put("point",A_point);
+        List<String> nmaes = new ArrayList<>();
+        A_map.put("name",names[count]);
         //第二条线
         List<Map<String,String>> B_line1 = new ArrayList<>();
         List<Map<String,String>> B_line2 = new ArrayList<>();

@@ -209,7 +209,7 @@ public class VoiceServiceImpl implements VoiceService {
             List<Map<String,String>> weak_Location = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 Map<String,String> map = list.get(i);
-                map.put("height",String.valueOf((int) (Math.random() * (25 - 15) + 15)));
+                map.put("height",String.valueOf((int) (Math.random() * (7 - 3) + 3)));
                 map.put("color","green");
                 weak_Location.add(map);
             }
@@ -243,7 +243,7 @@ public class VoiceServiceImpl implements VoiceService {
             List<Map<String,String>> china_tpLocation = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 Map<String,String> map = list.get(i);
-                map.put("height",String.valueOf((int) (Math.random() * (15 - 5) + 5)));
+                map.put("height",String.valueOf((int) (Math.random() * (15 - 8) + 8)));
                 map.put("color","red");
                 china_tpLocation.add(map);
             }

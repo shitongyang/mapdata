@@ -1,19 +1,29 @@
 package iscas.stategrid.mapdata.websocket;
 
 
+import com.alibaba.fastjson.JSON;
+import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.WinPositionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint("/Win")
 @Component
 public class WinPositionSocket {
-
+    private MyThread1 thread1 = new MyThread1();
     private static WinPositionService winPositionService;
+    @Autowired
+    public void setJCInfoService(WinPositionService winPositionService) {
+        WinPositionSocket.winPositionService = winPositionService;
+    }
     /**
      * session 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
@@ -36,6 +46,7 @@ public class WinPositionSocket {
         this.session = session;
         webSocketSet.add(this);
         System.out.println("风电场Socket连接成功");
+        thread1.start();
     }
 
     /**
@@ -45,6 +56,7 @@ public class WinPositionSocket {
     public void onClose() {
         webSocketSet.remove(this);
         System.out.println("风电场Socket连接关闭");
+        thread1.stop();
     }
 
     /**
@@ -88,5 +100,23 @@ public class WinPositionSocket {
     public void setSession(Session session) {
         this.session = session;
     }
+    public  class MyThread1 extends Thread
+    {
+        public String name;
+        public boolean isRun=true;
+        @Override
+        public void run()
+        {
+            while(isRun) {
+                List<Map<String,String>> DYW_info = winPositionService.getDYWInfo();
+                sendMessage(JSON.toJSONString(DYW_info));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
+            }
+        }
+    }
 }

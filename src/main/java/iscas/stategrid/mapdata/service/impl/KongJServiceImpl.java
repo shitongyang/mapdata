@@ -23,6 +23,7 @@ import static iscas.stategrid.mapdata.Utils.StaticResource.errorResult;
 public class KongJServiceImpl implements KongJService {
 
     NumberFormat Nformat = NumberFormat.getInstance();
+    private int count = 1;
     /*
      * 安全性指标
      * */
@@ -149,7 +150,7 @@ public class KongJServiceImpl implements KongJService {
         }
 
     @Override
-    public List<Map<String, String>>getImIndex(String area,String isStatic) {
+    public List<Map<String, String>> getImIndex(String area,String isStatic) {
         //获取稳定指标
         List<Map<String,String>> list = new ArrayList<>();
         List<String> ids = new ArrayList<>();
@@ -202,8 +203,8 @@ public class KongJServiceImpl implements KongJService {
         }
         return resultList;
     }
-
-    public List<Map<String, String>> getDeviceMotaiInfo(String area,String modelName) {
+    @Override
+    public List<Map<String, String>> getDeviceMotaiInfo(String area, String modelName) {
         //获取设备模态信息
         String rootPath = "/jar/lkb/";
         String flag = "";
@@ -224,7 +225,7 @@ public class KongJServiceImpl implements KongJService {
             flag = "2/";
         }
         List<Map<String,String>> list = new ArrayList<>();
-        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(2)+".txt");
+        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(count)+".txt");
         int row_count = Integer.parseInt(modelName.substring(2));
         String dev_value[] = content.get(row_count).split(",");
         for (int i = 2; i <dev_value.length ; i++) {
@@ -262,7 +263,7 @@ public class KongJServiceImpl implements KongJService {
             flag = "2/";
         }
         List<Map<String,Object>> list = new ArrayList<>();
-        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(2)+".txt");
+        List<String> content = fileClient.getContent(rootPath+flag+String.valueOf(count)+".txt");
         for (int i = 1; i < content.size(); i++) {
             Map<String,Object> map = new HashMap<>();
             String str_hz = content.get(i).split(",")[1];
@@ -276,6 +277,9 @@ public class KongJServiceImpl implements KongJService {
             map.put("hz",Nformat.format(hz));
             map.put("percent",Nformat.format(percent)+"%");
             list.add(map);
+        }
+        if(count<3){
+            count = count+1;
         }
         return list;
     }
@@ -379,19 +383,20 @@ public class KongJServiceImpl implements KongJService {
         //获取预想故障下区域信息
         List<Map<String,Object>> list = new ArrayList<>();
         List<String> locationList=new ArrayList<>();
-        locationList.add("国调峡葛III线");
-        locationList.add("华中 南香I回线");
-        locationList.add("团林换流站");
+        locationList.add("国调.峡葛III线");
+        locationList.add("华中.南香I回线");
+        locationList.add("国调.峡林I线");
         List<String> typeList=new ArrayList<>();
-        typeList.add("A相单相永久短路故障");
-        typeList.add("A相单相永久短路故障");
-        typeList.add("AB相两相永久短路故障");
+        typeList.add("A相短路故障");
+        typeList.add("A相短路故障");
+        typeList.add("AB两相短路故障");
         //"故障位置、故障类型、稳定状态"
         for(int i=0;i<locationList.size();i++){
             Map<String,Object> map = new HashMap<>();
-            map.put("location",locationList.get(i));
+            map.put("name","第"+String.valueOf(i+1)+"类故障");
+            map.put("line",locationList.get(i));
             map.put("type",typeList.get(i));
-            map.put("status","");
+            map.put("time","0.1s");
             list.add(map);
         }
         return list;
@@ -426,7 +431,6 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data5",getBoRuo(area));//获取薄弱点信息
 
             resultData.put("data7",getBaoRuoNumber());//获取薄弱节点各个的数量
-
             resultData.put("data9","");
             resultData.put("data10","");
         }

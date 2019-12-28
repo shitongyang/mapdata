@@ -76,7 +76,7 @@ public class WinPositionImpl implements WinPositionService {
     @Override
     public List<Map<String, String>> getDYWInfo() {
         Map<String,String> map=new HashMap<>();
-        map.put("time",content1.get(count).trim().split(",")[0]);
+        map.put("time",String.valueOf(count));
         map.put("WF_v",content1.get(count).trim().split(",")[1]);
         map.put("EQ4_v",content2.get(count).trim().split(",")[1]);
         map.put("EQ1_v",content3.get(count).trim().split(",")[1]);
@@ -91,9 +91,12 @@ public class WinPositionImpl implements WinPositionService {
             info.remove(0);
         }
         count=count+1;
-        if (count==800){
+        if (count==content1.size()){
             info = new ArrayList<>();
             count=0;
+        }
+        if(count == 0){
+            info = new ArrayList<>();
         }
         return info;
     }
