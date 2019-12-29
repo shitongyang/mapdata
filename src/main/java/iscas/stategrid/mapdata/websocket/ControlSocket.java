@@ -11,9 +11,8 @@ import org.springframework.stereotype.Controller;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -31,6 +30,18 @@ public class ControlSocket {
      * session 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
     private Session session;
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+    private static List<Map<String,Object>> list=new ArrayList<>();
+    private static String value=null;
+    //散点图
+
 
     private  static volatile String str="";
     //保存前端传过来的值
@@ -131,6 +142,30 @@ public class ControlSocket {
         this.session = session;
     }
 
+    public List<Map<String,Object>> sanDianMap(){
+
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        if(list.size()<=10){
+                Map<String, Object> map = new HashMap<>();
+                map.put("time", df.format(new Date()));
+                if(getValue()==null) {
+                    map.put("value", "1");
+                }
+                else{
+                    map.put("value",getValue());
+                    setValue(null);
+                }
+                list.add(map);
+        }
+        else
+        {
+            list.remove(0);
+        }
+
+        return list;
+    }
+
+
     public  class MyThread1 extends Thread
     {
 
@@ -155,6 +190,7 @@ public class ControlSocket {
                 data6.put("right2",(int)(Math.random()*8)+1+"h");
                 Map<String,Object> area_info = KongJService.getKongJInfo(name);
                 area_info.put("data6",data6);
+                area_info.put("data10",sanDianMap());
                 sendMessage(JSON.toJSONString(area_info));
                 try {
                     Thread.sleep(8000);

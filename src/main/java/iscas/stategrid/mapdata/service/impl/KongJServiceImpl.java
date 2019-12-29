@@ -459,7 +459,7 @@ public class KongJServiceImpl implements KongJService {
 
 
             resultData.put("data9",getAreaZDandZN(area));//获取模式，震荡频率，阻尼比
-            resultData.put("data10",getWeather(stLocationEntityMapper.selectCityByProvince(area)));//获取天气状况
+            resultData.put("data10","");//获取天气状况
         }
         else if(StaticResource.CITY_SET.contains(area)){
             resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
@@ -471,8 +471,7 @@ public class KongJServiceImpl implements KongJService {
 
             resultData.put("data9",getAreaZDandZN(area));
             //获取模式，震荡频率，阻尼比
-            resultData.put("data10",getWeather(stLocationEntityMapper.selectCountyByCity(area)));
-            //获取天气状况
+            resultData.put("data10","");
         }
         else
         {
