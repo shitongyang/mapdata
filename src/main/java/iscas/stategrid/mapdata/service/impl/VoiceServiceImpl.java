@@ -318,7 +318,7 @@ public class VoiceServiceImpl implements VoiceService {
             message = "success";
         }else if("0E".equals(commandType)){
             //降低风速
-            winPositionService.setTime("1");
+            winPositionService.setTime("2");
             voice_map.put("type","5");
             voice_map.put("voice",url+"风速已降低");
             message = "success";
