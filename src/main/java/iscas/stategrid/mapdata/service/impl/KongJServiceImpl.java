@@ -156,7 +156,7 @@ public class KongJServiceImpl implements KongJService {
         }
 
     @Override
-    public List<Map<String, String>> getImIndex(String area,String isStatic) {
+    public List<Map<String, String>>  getImIndex(String area,String isStatic) {
         //获取稳定指标
         List<Map<String,String>> list = new ArrayList<>();
         List<String> ids = new ArrayList<>();

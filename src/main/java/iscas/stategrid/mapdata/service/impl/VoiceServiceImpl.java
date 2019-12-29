@@ -216,7 +216,8 @@ public class VoiceServiceImpl implements VoiceService {
                 }else {
                     rate =  "0.29";
                 }
-                ControlSocket.setValue(String.valueOf(Double.parseDouble(rate)*0.01));
+                ControlSocket.value=String.valueOf(Double.parseDouble(rate)*0.01);
+                //ControlSocket.setValue(String.valueOf(Double.parseDouble(rate)*0.01));
                 voice_map.put("voice",url+"华中地区在此故障下稳定的概率是百分之"+rate);
                 voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             } catch (InterruptedException e) {

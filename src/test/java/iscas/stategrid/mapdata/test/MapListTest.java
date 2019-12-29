@@ -20,6 +20,10 @@ public class MapListTest {
         List<Map<String,Object>> list=new ArrayList<>();
         Map<String,Object> map=new HashMap<>();
         map.put("11",33);
+
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("11",33);
+        System.out.println(map.equals(map1));
         testMap.put("1",list);
         testMap.put("1",null);
         testMap.remove("2");

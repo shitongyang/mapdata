@@ -25,7 +25,6 @@ public class MapServiceImpl implements MapService {
     public List<Map<String, Object>> getTopoLine(String area) {
         JSONObject object=JSONObject.parseObject(area);
             String quyu=object.getString("area");
-            System.out.println(quyu);
             if ("全国".equals(quyu)) {
                 String type=object.getString("type");
                 if("2".equals(type)){
@@ -71,7 +70,6 @@ public class MapServiceImpl implements MapService {
     public List<Map<String, Object>> getTopoLocation(String area) {
         JSONObject object=JSONObject.parseObject(area);
             String quyu=object.getString("area");
-            System.out.println(quyu);
             String isStatic=object.getString("JZStatus");
 
             if("全国".equals(quyu)){

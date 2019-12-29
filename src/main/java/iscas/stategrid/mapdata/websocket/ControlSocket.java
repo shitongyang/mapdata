@@ -35,11 +35,11 @@ public class ControlSocket {
         return value;
     }
 
-    public static void  setValue(String value) {
-        value = value;
-    }
+//    public static void  setValue(String value) {
+//        value = value;
+//    }
     private static List<Map<String,Object>> list=new ArrayList<>();
-    private static String value=null;
+    public static volatile String value=null;
     //散点图
 
 
@@ -148,12 +148,13 @@ public class ControlSocket {
         if(list.size()<=10){
                 Map<String, Object> map = new HashMap<>();
                 map.put("time", df.format(new Date()));
+               System.out.println("11111111111111"+getValue());
                 if(getValue()==null) {
                     map.put("value", "1");
                 }
                 else{
                     map.put("value",getValue());
-                    setValue(null);
+                    value=null;
                 }
                 list.add(map);
         }
@@ -185,8 +186,6 @@ public class ControlSocket {
                 data6.put("left1",topo_Line_info.size());
                 data6.put("left2",(int)(Math.random()*10)+20);
                 data6.put("right1",(int)(Math.random()*2)+5);
-                //Calendar calendar=Calendar.getInstance();
-                //int currentHour24=calendar.get(calendar.HOUR_OF_DAY);
                 data6.put("right2",(int)(Math.random()*8)+1+"h");
                 Map<String,Object> area_info = KongJService.getKongJInfo(name);
                 area_info.put("data6",data6);

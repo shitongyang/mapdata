@@ -43,7 +43,6 @@ public class MapTopoWebSocket {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        System.out.println(session.getId());
         webSocketSet.add(this);
         System.out.println("地图Socket连接成功");
     }
@@ -151,7 +150,6 @@ public class MapTopoWebSocket {
                     System.out.println("已经进入区域暂态");
                     result.remove("area_tpLine");
                     result.remove("area_tpLocation");
-                    System.out.println(result);
                     //把拓扑的站点和线路清空
                     String error_point=object.getString("error_point");
                     Map mapTypes = JSON.parseObject(error_point);
@@ -170,7 +168,6 @@ public class MapTopoWebSocket {
                     List bj_pointList=JSONObject.parseArray(bj_point);
                     result.put("bj_point",bj_pointList);
                     result.put("hide","true");
-                    System.out.println(result);
                 }
                 else if(quyu.equals("全国")&&isStatic.equals("3")){
                     System.out.println("已经进入全国薄弱点");
@@ -179,7 +176,6 @@ public class MapTopoWebSocket {
                     String globalWeak=object.getString("weak_Location");
                     List globalWeakList=JSONObject.parseArray(globalWeak);
                     result.put("weak_Location",globalWeakList);
-                    System.out.println(result.toString());
                 }
                 sendMessage(JSON.toJSONString(result));
                 try {
