@@ -332,11 +332,13 @@ public class VoiceServiceImpl implements VoiceService {
             //降低风速
             voice_map.put("type","5");
             voice_map.put("voice",url+"风速已降低");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             message = "success";
         }else if("0F".equals(commandType)){
             //提高风速
             voice_map.put("type","5");
             voice_map.put("voice",url+"风速已提高");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             message = "success";
         }
         return message;
