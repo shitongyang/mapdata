@@ -17,7 +17,7 @@
         SELECT lng,lat FROM wind where id=#{id}
   </select>
     <select id="getWind" resultType="java.util.Map">
-        SELECT lng,lat,id FROM wind
+        SELECT lng,lat,id,`group` FROM wind,wind_group WHERE time = #{time} AND member LIKE concat('%',id,'%')
     </select>
 
 

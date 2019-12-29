@@ -14,16 +14,15 @@ import java.util.Map;
 public class WinPositionImpl implements WinPositionService {
     @Autowired
     private WinPositionDao winPositionDao;
-    private int count=0;
+    private int count = 0;
+    private String time = "1";
     private List<Map<String,String>> info=new ArrayList<>();
-
     //全国风电机组的位置
     @Override
     public List<Map<String, String>> getWinPosition() {
         List<Map<String, String>> wp = winPositionDao.getWinPosition();
         return wp;
     }
-
     //地区某风电机组下各个风电机的位置与连接情况
     @Override
         public Map<String,List<Map<String,String>>> getWinLine() {
@@ -41,7 +40,7 @@ public class WinPositionImpl implements WinPositionService {
                 data1.add(map);
             }
             info_map.put("data1",data1);
-            info_map.put("data2",winPositionDao.getWind());
+            info_map.put("data2",winPositionDao.getWind(time));
             return info_map;
         }
 
@@ -99,5 +98,9 @@ public class WinPositionImpl implements WinPositionService {
             info = new ArrayList<>();
         }
         return info;
+    }
+    @Override
+    public void setTime(String timePara){
+            time = timePara;
     }
 }

@@ -16,5 +16,5 @@ public interface WinPositionDao {
     //地区某风电机组下各个风电机的位置与连接情况
     Map<String,String> getWinLocation(String id);
     List<Map<String,String>> getWinLine();
-    List<Map<String,String>> getWind();
+    List<Map<String,String>> getWind(String time);
 }

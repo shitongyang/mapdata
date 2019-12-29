@@ -6,6 +6,7 @@ import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.VoiceService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.Utils.StaticResource;
+import iscas.stategrid.mapdata.service.WinPositionService;
 import iscas.stategrid.mapdata.websocket.ControlSocket;
 import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
 import iscas.stategrid.mapdata.websocket.VoiceSocket;
@@ -36,7 +37,8 @@ public class VoiceServiceImpl implements VoiceService {
     private LocationMapper stLocationEntityMapper;
     @Autowired
     private KongJService kongJService;
-    private List<Map<String,String>> info;
+    @Autowired
+    private WinPositionService winPositionService;
     private boolean isControl = false;
     @Override
     public String queryCommand(String commandType, String area) {
@@ -300,6 +302,7 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("name","平台监控");
             voice_map.put("voice",url+"已为您切换到大数据平台监控界面");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            message = "success";
         }else if("0C".equals(commandType)){
             //切换到综合分析界面
         }else if("0D".equals(commandType)){
@@ -312,15 +315,24 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("type","2");
             voice_map.put("voice",url+"已为您展示潮流数据");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            message = "success";
+        }else if("0E".equals(commandType)){
+            //降低风速
+            winPositionService.setTime("1");
+            voice_map.put("type","5");
+            voice_map.put("voice",url+"风速已降低");
+            message = "success";
+        }else if("0F".equals(commandType)){
+            //提高风速
+            winPositionService.setTime("0");
+            voice_map.put("type","5");
+            voice_map.put("voice",url+"风速已提高");
+            message = "success";
         }
         return message;
     }
     @Override
     public boolean getControl(){
         return isControl;
-    }
-    @Override
-    public List<Map<String,String>> getInfo(){
-        return info;
     }
 }

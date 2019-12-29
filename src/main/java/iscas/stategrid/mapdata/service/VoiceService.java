@@ -38,14 +38,4 @@ public interface VoiceService {
      * @date: 2019/12/18 9:28
      */
     public boolean getControl();
-    /**
-     *
-     * 功能描述: 获取插入故障信息
-     *
-     * @param:
-     * @return:
-     * @auther: lvxianjin
-     * @date: 2019/12/18 9:28
-     */
-    public List<Map<String,String>> getInfo();
 }

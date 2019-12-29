@@ -10,4 +10,5 @@ public interface WinPositionService {
     Map<String,List<Map<String,String>>> getWinLine();
     //区域展示电压、有功功率、无功对比折线
     List<Map<String,String>> getDYWInfo();
+    public void setTime(String timePara);
 }
