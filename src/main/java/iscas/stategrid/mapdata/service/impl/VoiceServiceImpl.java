@@ -201,6 +201,9 @@ public class VoiceServiceImpl implements VoiceService {
             error_point.put("percent",voiceDao.getErrorInfo(parameter).get("percent"));
             Map<String,String> name_map1 = new HashMap<>();
             Map<String,String> name_map2 = new HashMap<>();
+            for (int i = 0; i < voiceDao.getNames(parameter).size(); i++) {
+                nameInfo.add(voiceDao.getNames(parameter).get(i));
+            }
             name_map1.put("lng",voiceDao.getErrorInfo(parameter).get("Flng"));
             name_map1.put("lat",voiceDao.getErrorInfo(parameter).get("Flat"));
             name_map1.put("name",voiceDao.getErrorInfo(parameter).get("from"));
@@ -221,7 +224,7 @@ public class VoiceServiceImpl implements VoiceService {
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             String rate = "";
             try {
-                Thread.sleep(1500);
+                Thread.sleep(2500);
                 voice_map.put("type","2");
                 if("1".equals(parameter)){
                     rate =  "0.56";

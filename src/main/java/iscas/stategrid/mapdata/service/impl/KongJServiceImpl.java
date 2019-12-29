@@ -315,7 +315,6 @@ public class KongJServiceImpl implements KongJService {
         //获取报警信息
         SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
         List<Map<String,Object>> list1 = kongJianMapper.getBoRuo(area);
-
         List<Map<String,Object>> list = new ArrayList<>();
         for(int i=0;i<list1.size();i++){
             double police = Double.parseDouble(list1.get(i).get("before").toString());
@@ -396,10 +395,20 @@ public class KongJServiceImpl implements KongJService {
         locationList.add("国调.峡葛III线");
         locationList.add("华中.南香I回线");
         locationList.add("国调.峡林I线");
+        locationList.add("河南.Ⅲ灵朝线");
+        locationList.add("河南.Ⅱ盘灵线");
+        locationList.add("华中.盘龙ⅠB线");
+        locationList.add("国调.南洲I线");
+        locationList.add("华中.葛岗线");
         List<String> typeList=new ArrayList<>();
         typeList.add("A相短路故障");
         typeList.add("A相短路故障");
         typeList.add("AB两相短路故障");
+        typeList.add("AB两相短路故障");
+        typeList.add("单相短路故障");
+        typeList.add("单相短路故障");
+        typeList.add("单相短路故障");
+        typeList.add("单相短路故障");
         //"故障位置、故障类型、稳定状态"
         for(int i=0;i<locationList.size();i++){
             Map<String,Object> map = new HashMap<>();
@@ -514,7 +523,6 @@ public class KongJServiceImpl implements KongJService {
         resultData.put("data7",getBaoRuoNumber());
         resultData.put("data9","");
         resultData.put("data10","");//区域故障信息 散点图 右二 在controlSocket里写了
-
         return resultData;
     }
     @Override

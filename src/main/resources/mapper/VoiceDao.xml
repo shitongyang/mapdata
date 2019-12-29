@@ -21,4 +21,7 @@
     <select id="getNameInfo" resultType="java.util.Map">
         SELECT * FROM error WHERE id = '1'
     </select>
+    <select id="getNames" resultType="java.util.Map">
+        SELECT * FROM names WHERE para = #{para}
+    </select>
 </mapper>

@@ -20,4 +20,5 @@ public interface VoiceDao {
     public List<Map<String,String>> getWeak(String area);
     public String getGroup(String time,String member);
     public Map<String,String> getNameInfo(String id);
+    public List<Map<String,String>> getNames(String para);
 }
