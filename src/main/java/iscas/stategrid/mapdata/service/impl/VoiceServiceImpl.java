@@ -6,9 +6,11 @@ import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.service.VoiceService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
 import iscas.stategrid.mapdata.Utils.StaticResource;
+import iscas.stategrid.mapdata.websocket.ControlSocket;
 import iscas.stategrid.mapdata.websocket.MapTopoWebSocket;
 import iscas.stategrid.mapdata.websocket.VoiceSocket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,15 +141,22 @@ public class VoiceServiceImpl implements VoiceService {
             Map<String,Object> message_map = new HashMap<>();
             Map<String,String> error_point = new HashMap<>();
             List<Map<String,String>> error_line = new ArrayList<>();
-            List<Map<String,String>> from_list = voiceDao.getLineInfo(voiceDao.getErrorInfo(parameter).get("from"));
-            List<Map<String,String>> to_list =   voiceDao.getLineInfo(voiceDao.getErrorInfo(parameter).get("to"));
+            List<Map<String,String>> bj_line = new ArrayList<>();
+            String start_station = voiceDao.getErrorInfo(parameter).get("from");
+            String end_station = voiceDao.getErrorInfo(parameter).get("to");
+            List<Map<String,String>> from_list = voiceDao.getLineInfo(start_station);
+            List<Map<String,String>> to_list =   voiceDao.getLineInfo(end_station);
             for (int i = 0; i <from_list.size(); i++) {
                 Map<String,String> line_map = new HashMap<>();
                 line_map.put("Flng",voiceDao.getLocationByName(from_list.get(i).get("from")).get("lng"));
                 line_map.put("Flat",voiceDao.getLocationByName(from_list.get(i).get("from")).get("lat"));
                 line_map.put("Tlng",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lng"));
                 line_map.put("Tlat",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lat"));
-                error_line.add(line_map);
+                if(from_list.get(i).get("from").equals(start_station)&&from_list.get(i).get("to").equals(end_station)){
+                    error_line.add(line_map);
+                }else {
+                    bj_line.add(line_map);
+                }
             }
             for (int i = 0; i <to_list.size(); i++) {
                 Map<String,String> line_map = new HashMap<>();
@@ -156,6 +165,11 @@ public class VoiceServiceImpl implements VoiceService {
                 line_map.put("Tlng",voiceDao.getLocationByName(to_list.get(i).get("to")).get("lng"));
                 line_map.put("Tlat",voiceDao.getLocationByName(to_list.get(i).get("to")).get("lat"));
                 error_line.add(line_map);
+                if(to_list.get(i).get("from").equals(start_station)&&to_list.get(i).get("to").equals(end_station)){
+
+                }else {
+                    bj_line.add(line_map);
+                }
             }
             message_map.put("area","华中");
             message_map.put("JZStatus","2");
@@ -167,6 +181,7 @@ public class VoiceServiceImpl implements VoiceService {
             error_point.put("percent",voiceDao.getErrorInfo(parameter).get("percent"));
             message_map.put("error_point",error_point);
             message_map.put("error_line",error_line);
+            message_map.put("bj_line",bj_line);
             String message_json = JSON.toJSONString(message_map);
             mapTopoWebSocket.onMessage(message_json);
             voice_map.put("type","2");
@@ -183,23 +198,19 @@ public class VoiceServiceImpl implements VoiceService {
                 }else {
                     rate =  "0.29";
                 }
+                ControlSocket.setValue(String.valueOf(Double.parseDouble(rate)*0.01));
                 voice_map.put("voice",url+"华中地区在此故障下稳定的概率是百分之"+rate);
                 voiceSocket.sendMessage(JSON.toJSONString(voice_map));
-                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             message = "success";
         }else if("06".equals(commandType)){
-            /*
-             * 根据调控策略进行调控
-             * 过了七秒传输柱子的信息，薄弱节点柱子有明显升高
-             * */
             voice_map.put("type","2");
             voice_map.put("voice",url+"正在调控");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             try {
-                Thread.sleep(7000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -35,8 +35,8 @@ public class ControlSocket {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public static void setValue(String value) {
+        value = value;
     }
     private static List<Map<String,Object>> list=new ArrayList<>();
     private static String value=null;
