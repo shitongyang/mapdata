@@ -142,6 +142,7 @@ public class VoiceServiceImpl implements VoiceService {
             Map<String,String> error_point = new HashMap<>();
             List<Map<String,String>> error_line = new ArrayList<>();
             List<Map<String,String>> bj_line = new ArrayList<>();
+            List<Map<String,String>> bj_point = new ArrayList<>();
             String start_station = voiceDao.getErrorInfo(parameter).get("from");
             String end_station = voiceDao.getErrorInfo(parameter).get("to");
             List<Map<String,String>> from_list = voiceDao.getLineInfo(start_station);
@@ -153,7 +154,9 @@ public class VoiceServiceImpl implements VoiceService {
                 line_map.put("Tlng",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lng"));
                 line_map.put("Tlat",voiceDao.getLocationByName(from_list.get(i).get("to")).get("lat"));
                 if(from_list.get(i).get("from").equals(start_station)&&from_list.get(i).get("to").equals(end_station)){
-                    error_line.add(line_map);
+                    if(error_line.size()<1){
+                        error_line.add(line_map);
+                    }
                 }else {
                     bj_line.add(line_map);
                 }
@@ -164,11 +167,17 @@ public class VoiceServiceImpl implements VoiceService {
                 line_map.put("Flat",voiceDao.getLocationByName(to_list.get(i).get("from")).get("lat"));
                 line_map.put("Tlng",voiceDao.getLocationByName(to_list.get(i).get("to")).get("lng"));
                 line_map.put("Tlat",voiceDao.getLocationByName(to_list.get(i).get("to")).get("lat"));
-                error_line.add(line_map);
                 if(to_list.get(i).get("from").equals(start_station)&&to_list.get(i).get("to").equals(end_station)){
-
                 }else {
                     bj_line.add(line_map);
+                }
+            }
+            for (int i = 0; i < bj_line.size(); i++) {
+                Map<String,String> map = new HashMap<>();
+                map.put("lng",bj_line.get(i).get("Flng"));
+                map.put("lat",bj_line.get(i).get("Flat"));
+                if(!bj_line.get(i).equals(voiceDao.getLocationByName(start_station))||!bj_line.get(i).equals(voiceDao.getLocationByName(end_station))){
+                    bj_point.add(map);
                 }
             }
             message_map.put("area","华中");
@@ -182,6 +191,7 @@ public class VoiceServiceImpl implements VoiceService {
             message_map.put("error_point",error_point);
             message_map.put("error_line",error_line);
             message_map.put("bj_line",bj_line);
+            message_map.put("bj_point",bj_point);
             String message_json = JSON.toJSONString(message_map);
             mapTopoWebSocket.onMessage(message_json);
             voice_map.put("type","2");
