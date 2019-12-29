@@ -31,4 +31,9 @@ public class HelloController {
     public String getModelInfo(@RequestParam("area") String area,@RequestParam(defaultValue = "模式1") String modelName){
         return JSON.toJSONString(kongJService.getDeviceMotaiInfo(area,modelName));
     }
+
+    @RequestMapping(value="/getAreaModel",method = RequestMethod.GET)
+    public String getAreaModel(@RequestParam("area") String area){
+        return JSON.toJSONString(kongJService.getAreaZDandZN(area));
+    }
 }

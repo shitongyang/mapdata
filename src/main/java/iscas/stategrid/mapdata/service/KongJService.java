@@ -76,5 +76,7 @@ List<Map<String,String>> getImIndex(String area,String isStatic);
  Map<String,Object> getKongJInfo(String message);
 
  List<Map<String, String>> getDeviceMotaiInfo(String area,String modelName);
+
+List<Map<String,Object>> getAreaZDandZN(String area);
 }
 

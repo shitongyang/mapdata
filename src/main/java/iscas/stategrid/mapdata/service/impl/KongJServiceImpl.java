@@ -247,6 +247,7 @@ public class KongJServiceImpl implements KongJService {
         return list;
     }
 
+    @Override
     public List<Map<String,Object>> getAreaZDandZN(String area)
     {
         //获得区域的震荡频率和阻尼比
@@ -284,9 +285,12 @@ public class KongJServiceImpl implements KongJService {
             map.put("percent",Nformat.format(percent)+"%");
             list.add(map);
         }
-        if(count<3){
-            count = count+1;
-        }
+
+        count = count+1;
+        if(count>3)
+            count=1;
+
+
         return list;
     }
     public List<Map<String,Object>> getWeather(List<String> list){
