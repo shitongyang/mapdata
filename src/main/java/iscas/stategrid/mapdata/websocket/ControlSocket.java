@@ -31,11 +31,11 @@ public class ControlSocket {
      */
     private Session session;
 
-    public String getValue() {
+    public static String getValue() {
         return value;
     }
 
-    public static void setValue(String value) {
+    public static void  setValue(String value) {
         value = value;
     }
     private static List<Map<String,Object>> list=new ArrayList<>();

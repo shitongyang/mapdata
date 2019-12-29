@@ -438,28 +438,20 @@ public class KongJServiceImpl implements KongJService {
 
             resultData.put("data7",getBaoRuoNumber());//获取薄弱节点各个的数量
             resultData.put("data9","");
-            resultData.put("data10","");
         }
         else if(StaticResource.AREA_Set.contains(area)){
             resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
             resultData.put("data2",getImIndex(area,isStatic));//获取区域下省份的稳定指标信息
             resultData.put("data4","");
             resultData.put("data5",getBoRuo(area));
-
-
             resultData.put("data9",getAreaZDandZN(area));//获取模式，震荡频率，阻尼比
-            resultData.put("data10","");
         }
         else if(StaticResource.PROVINCE_Set.contains(area)){
             resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
             resultData.put("data2",getImIndex(area,isStatic));//获取区域下省份的稳定指标信息
             resultData.put("data4","");
             resultData.put("data5",getBoRuo(area));
-
-
-
             resultData.put("data9",getAreaZDandZN(area));//获取模式，震荡频率，阻尼比
-            resultData.put("data10","");//获取天气状况
         }
         else if(StaticResource.CITY_SET.contains(area)){
             resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
@@ -467,11 +459,8 @@ public class KongJServiceImpl implements KongJService {
 
             resultData.put("data4","");
             resultData.put("data5",getBoRuo(area));
-
-
             resultData.put("data9",getAreaZDandZN(area));
             //获取模式，震荡频率，阻尼比
-            resultData.put("data10","");
         }
         else
         {
@@ -483,6 +472,7 @@ public class KongJServiceImpl implements KongJService {
 
         resultData.put("data7",getBaoRuoNumber());
         resultData.put("data11","");
+        resultData.put("data10","");
         resultData.put("data12","");
         return resultData;
 
@@ -497,9 +487,6 @@ public class KongJServiceImpl implements KongJService {
 
             resultData.put("data4","");
             resultData.put("data5",getBoRuo(area));//获取薄弱点信息//左一
-
-
-            resultData.put("data10","");
             resultData.put("data11","");
             resultData.put("data12","");
         }
@@ -509,9 +496,6 @@ public class KongJServiceImpl implements KongJService {
 
             resultData.put("data4","");
             resultData.put("data5",getBoRuo(area));
-
-
-            resultData.put("data10","");//区域故障信息 散点图 右二
             resultData.put("data11",getYuXiang());
             resultData.put("data12",getTiaoKongBoRuo());
         }
@@ -521,10 +505,11 @@ public class KongJServiceImpl implements KongJService {
             return resultData;
         }
         resultData.put("data0",getIndex());
-        resultData.put("data3",getControlPolice());//左二
+        resultData.put("data3",getControlPolice());
         //获取设备调控策略
         resultData.put("data7",getBaoRuoNumber());
         resultData.put("data9","");
+        resultData.put("data10","");//区域故障信息 散点图 右二 在controlSocket里写了
 
         return resultData;
     }

@@ -162,6 +162,9 @@ public class MapTopoWebSocket {
                     List badLineList=JSONObject.parseArray(error_line);
                     result.put("badPoint",badPointList);
                     result.put("badLine",badLineList);
+                    String bj_line=object.getString("bj_line");
+                    List bj_List=JSONObject.parseArray(bj_line);
+                    result.put("bj_line",bj_List);
                     result.put("hide","true");
                     System.out.println(result);
                 }
