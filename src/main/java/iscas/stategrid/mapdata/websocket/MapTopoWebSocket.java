@@ -167,6 +167,7 @@ public class MapTopoWebSocket {
                     String bj_point=object.getString("bj_point");
                     List bj_pointList=JSONObject.parseArray(bj_point);
                     result.put("bj_point",bj_pointList);
+                    result.put("nameInfo",object.get("nameInfo"));
                     result.put("hide","true");
                 }
                 else if(quyu.equals("全国")&&isStatic.equals("3")){

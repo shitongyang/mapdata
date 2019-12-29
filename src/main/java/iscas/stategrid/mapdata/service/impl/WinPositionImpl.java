@@ -25,10 +25,10 @@ public class WinPositionImpl implements WinPositionService {
     }
     //地区某风电机组下各个风电机的位置与连接情况
     @Override
-        public Map<String,List<Map<String,String>>> getWinLine() {
+        public Map<String,List<Map<String,String>>> getWinLine(String time) {
             Map<String,List<Map<String,String>>> info_map = new HashMap<>();
             List<Map<String,String>> data1 = new ArrayList<>();
-            List<Map<String,String>> info=winPositionDao.getWinLine();
+            List<Map<String,String>> info = winPositionDao.getWinLine();
             for (int i=0;i<info.size();i++){
                 Map<String,String> map=new HashMap<>();
                 String from=info.get(i).get("from");
@@ -98,9 +98,5 @@ public class WinPositionImpl implements WinPositionService {
             info = new ArrayList<>();
         }
         return info;
-    }
-    @Override
-    public void setTime(String timePara){
-            time = timePara;
     }
 }

@@ -18,4 +18,7 @@
     <select id="getGroup" resultType="java.lang.String">
         SELECT `group` FROM wind_group WHERE time = #{time} AND member LIKE #{member}
     </select>
+    <select id="getNameInfo" resultType="java.util.Map">
+        SELECT * FROM error WHERE id = '1'
+    </select>
 </mapper>

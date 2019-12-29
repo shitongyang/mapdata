@@ -145,6 +145,7 @@ public class VoiceServiceImpl implements VoiceService {
             List<Map<String,String>> error_line = new ArrayList<>();
             List<Map<String,String>> bj_line = new ArrayList<>();
             List<Map<String,String>> bj_point = new ArrayList<>();
+            List<Map<String,String>> nameInfo = new ArrayList<>();
             String start_station = voiceDao.getErrorInfo(parameter).get("from");
             String end_station = voiceDao.getErrorInfo(parameter).get("to");
             List<Map<String,String>> from_list = voiceDao.getLineInfo(start_station);
@@ -198,10 +199,21 @@ public class VoiceServiceImpl implements VoiceService {
             error_point.put("Tlng",voiceDao.getErrorInfo(parameter).get("Tlng"));
             error_point.put("Tlat",voiceDao.getErrorInfo(parameter).get("Tlat"));
             error_point.put("percent",voiceDao.getErrorInfo(parameter).get("percent"));
+            Map<String,String> name_map1 = new HashMap<>();
+            Map<String,String> name_map2 = new HashMap<>();
+            name_map1.put("lng",voiceDao.getErrorInfo(parameter).get("Flng"));
+            name_map1.put("lat",voiceDao.getErrorInfo(parameter).get("Flat"));
+            name_map1.put("name",voiceDao.getErrorInfo(parameter).get("from"));
+            name_map2.put("lng",voiceDao.getErrorInfo(parameter).get("Tlng"));
+            name_map2.put("lat",voiceDao.getErrorInfo(parameter).get("Tlat"));
+            name_map2.put("name",voiceDao.getErrorInfo(parameter).get("to"));
+            nameInfo.add(name_map1);
+            nameInfo.add(name_map2);
             message_map.put("error_point",error_point);
             message_map.put("error_line",error_line);
             message_map.put("bj_line",bj_line);
             message_map.put("bj_point",bj_point);
+            message_map.put("nameInfo",nameInfo);
             String message_json = JSON.toJSONString(message_map);
             mapTopoWebSocket.onMessage(message_json);
             voice_map.put("type","2");
@@ -318,13 +330,11 @@ public class VoiceServiceImpl implements VoiceService {
             message = "success";
         }else if("0E".equals(commandType)){
             //降低风速
-            winPositionService.setTime("2");
             voice_map.put("type","5");
             voice_map.put("voice",url+"风速已降低");
             message = "success";
         }else if("0F".equals(commandType)){
             //提高风速
-            winPositionService.setTime("0");
             voice_map.put("type","5");
             voice_map.put("voice",url+"风速已提高");
             message = "success";
