@@ -165,6 +165,10 @@ public class MapTopoWebSocket {
                     String bj_line=object.getString("bj_line");
                     List bj_List=JSONObject.parseArray(bj_line);
                     result.put("bj_line",bj_List);
+
+                    String bj_point=object.getString("bj_point");
+                    List bj_pointList=JSONObject.parseArray(bj_point);
+                    result.put("bj_point",bj_pointList);
                     result.put("hide","true");
                     System.out.println(result);
                 }
