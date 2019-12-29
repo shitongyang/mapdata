@@ -27,7 +27,13 @@ public class MapServiceImpl implements MapService {
             String quyu=object.getString("area");
             System.out.println(quyu);
             if ("全国".equals(quyu)) {
-                return locationEntitymapper.selectGlobalTopo();
+                String type=object.getString("type");
+                if("2".equals(type)){
+                    return locationEntitymapper.selectGlobalTopo("dc_line_1");
+                }
+                else {
+                    return locationEntitymapper.selectGlobalTopo("dc_line");
+                }
             } else if (StaticResource.AREA_Set.contains(quyu)) {
                 List<Map<String, Object>> list = locationEntitymapper.selectAreaTopo(quyu ,"1000kv");
                 if (list == null || list.size() <10) {
@@ -67,13 +73,21 @@ public class MapServiceImpl implements MapService {
             String quyu=object.getString("area");
             System.out.println(quyu);
             String isStatic=object.getString("JZStatus");
+
             if("全国".equals(quyu)){
-                List<Map<String, Object>> list=locationEntitymapper.selectGlobalTopoLocation("");
-                if("2".equals(isStatic)){
-                    //暂态
-                    for(int i=0;i<list.size();i++){
-                        list.get(i).put("height",(int)(Math.random()*7)+30);
+                String type=object.getString("type");
+                List<Map<String, Object>> list=null;
+                if("1".equals(type)){
+                    list=locationEntitymapper.selectGlobalTopoLocation("dc_line");
+                    if("2".equals(isStatic)){
+                        //暂态
+                        for(int i=0;i<list.size();i++){
+                            list.get(i).put("height",(int)(Math.random()*7)+30);
+                        }
                     }
+                }
+                else{
+                    list=locationEntitymapper.selectGlobalTopoLocation("dc_line_1");
                 }
                 return list;
             }

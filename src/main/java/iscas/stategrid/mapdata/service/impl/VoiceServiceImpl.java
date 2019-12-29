@@ -208,7 +208,7 @@ public class VoiceServiceImpl implements VoiceService {
             List<Map<String,String>> weak_Location = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 Map<String,String> map = list.get(i);
-                map.put("height",String.valueOf((int) (Math.random() * (7 - 3) + 3)));
+                map.put("height",String.valueOf((int) (Math.random() * (15 - 8) + 8)));
                 map.put("color","green");
                 weak_Location.add(map);
             }
@@ -225,13 +225,17 @@ public class VoiceServiceImpl implements VoiceService {
             /*
             * 进入哈尔滨风电机组
             * */
+            voice_map.put("type","4");
+            voice_map.put("voice",url+"已为您展示到哈尔滨风电机组");
+            voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            message = "success";
         }else if("08".equals(commandType)){
             //xx站的电压是多少
             Map<String,String> map = voiceDao.getLocationByName("%"+parameter);
             int type = Integer.parseInt(map.get("type").substring(0,map.get("type").indexOf("k")));
             double d = ((int) (Math.random() * (10 - 1) + 1)) * 0.01;
             map.put("value",String.valueOf(type-(type*0.05)*d)+"kv");
-            voice_map.put("type","4");
+            voice_map.put("type","5");
             voice_map.put("data",JSON.toJSONString(map));
             voice_map.put("voice",url+parameter+"的电压是"+String.valueOf(map.get("value")));
             message = "success";
@@ -242,7 +246,7 @@ public class VoiceServiceImpl implements VoiceService {
             List<Map<String,String>> china_tpLocation = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 Map<String,String> map = list.get(i);
-                map.put("height",String.valueOf((int) (Math.random() * (15 - 8) + 8)));
+                map.put("height",String.valueOf((int) (Math.random() * (7 - 3) + 3)));
                 map.put("color","red");
                 china_tpLocation.add(map);
             }
@@ -260,6 +264,7 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("name","模型测辨");
             voice_map.put("voice",url+"已为您切换到模型测辨界面");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
+            message = "success";
         }else if("0B".equals(commandType)){
             voice_map.put("type","3");
             voice_map.put("name","平台监控");

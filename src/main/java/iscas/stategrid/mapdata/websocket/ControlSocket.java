@@ -114,9 +114,9 @@ public class ControlSocket {
     public void sendMessage(String message) {
         for (ControlSocket socketServer : webSocketSet) {
             try {
-                //synchronized (session) {
+                synchronized (session) {
                 socketServer.session.getBasicRemote().sendText(message);
-                //}
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -143,6 +143,7 @@ public class ControlSocket {
         public void run()
         {
             while(isRun) {
+                System.out.println("在控件_run方法中进来的参数是:" + name);
                 List<Map<String, Object>> topo_Line_info = mapService.getTopoLine(name);
                 Map<String,Object> data6=new HashMap<>();
                 //

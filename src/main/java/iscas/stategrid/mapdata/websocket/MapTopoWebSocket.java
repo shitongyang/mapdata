@@ -87,8 +87,6 @@ public class MapTopoWebSocket {
             a.start();
             str=message;
         }
-        //RedisClient client = new RedisClient();
-        //client.setValue("id",message);
     }
     public  class MyThread extends Thread
     {
@@ -209,9 +207,9 @@ public class MapTopoWebSocket {
     public  void  sendMessage(String message) {
        for (MapTopoWebSocket socketServer : webSocketSet) {
             try {
-                //synchronized (session) {
+                synchronized (socketServer.session) {
                 socketServer.session.getBasicRemote().sendText(message);
-                //}
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

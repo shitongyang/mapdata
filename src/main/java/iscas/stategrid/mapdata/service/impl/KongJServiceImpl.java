@@ -76,11 +76,18 @@ public class KongJServiceImpl implements KongJService {
     @Override
     public Map<String, String> getIndex() {
         Map<String, String> info = new HashMap<>();
-        index_1 = (int) (Math.random() * (85 - 30) + 30);
-        index_2 = (int) (Math.random() * (85 - 30) + 30);
-        index_3 = (int) (Math.random() * (85 - 30) + 30);
-        index_4 = (int) (Math.random() * (85 - 30) + 30);
-        index_5 = (int) (Math.random() * (85 - 30) + 30);
+        Calendar calendar=Calendar.getInstance();
+        int currentMinute=calendar.get(calendar.MINUTE);
+//        index_1 = (int) (Math.random() * (85 - 30) + 30);
+//        index_2 = (int) (Math.random() * (85 - 30) + 30);
+//        index_3 = (int) (Math.random() * (85 - 30) + 30);
+//        index_4 = (int) (Math.random() * (85 - 30) + 30);
+//        index_5 = (int) (Math.random() * (85 - 30) + 30);
+        index_1 = (currentMinute+30)%80;
+        index_2 = (currentMinute+35)%80;
+        index_3 = (currentMinute+40)%80;
+        index_4 = (currentMinute+50)%80;
+        index_5 = (currentMinute+55)%80;
         info.put("index_1", String.valueOf(index_1));
         info.put("index_2", String.valueOf(index_2));
         info.put("index_3", String.valueOf(index_3));
@@ -107,7 +114,6 @@ public class KongJServiceImpl implements KongJService {
 
     @Override
     public Map<String,Object> getAreaInfo() {
-        String rootPath = "/jar/lkb/";
         Map<String,Object> resultMap = new HashMap<>();
         for(String s:StaticResource.AREA_Set){
             resultMap.put(s,getAreaZDandZN(s));
@@ -363,7 +369,7 @@ public class KongJServiceImpl implements KongJService {
         return map;
     }
     public List<Map<String, Object>> getBoRuo(String area){
-        //获取全国的薄弱节点
+        //获取薄弱节点以及裕度
         List<Map<String,Object>> list1 = kongJianMapper.getBoRuo(area);
         List<Map<String,Object>> list = new ArrayList<>();
         Nformat.setMaximumFractionDigits(2);
@@ -448,7 +454,7 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
             resultData.put("data2",getImIndex(area,isStatic));//获取区域下省份的稳定指标信息
             resultData.put("data4","");
-            resultData.put("data5","");
+            resultData.put("data5",getBoRuo(area));
 
 
 
@@ -460,7 +466,7 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data2",getImIndex("哈尔滨市",isStatic));//获取区域下省份的稳定指标信息
 
             resultData.put("data4","");
-            resultData.put("data5","");
+            resultData.put("data5",getBoRuo(area));
 
 
             resultData.put("data9",getAreaZDandZN(area));
@@ -487,14 +493,14 @@ public class KongJServiceImpl implements KongJService {
         //模拟态
         Map<String,Object> resultData =new HashMap<>();
         if("全国".equals(area)){
-            resultData.put("data1",getBaoJing(area,"1"));//获取报警信息
+            resultData.put("data1",getBaoJing(area,"1"));//获取报警信息 左三
             resultData.put("data2",getImIndex("全国","1"));//获取稳定指标信息
 
-            resultData.put("data4",getAreaInfo());//获取六大区域的震荡频率和阻尼比
-            resultData.put("data5",getBoRuo(area));//获取薄弱点信息
+            resultData.put("data4","");
+            resultData.put("data5",getBoRuo(area));//获取薄弱点信息//左一
 
 
-
+            resultData.put("data10","");
             resultData.put("data11","");
             resultData.put("data12","");
         }
@@ -503,10 +509,10 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data2",getImIndex(area,"1"));//获取区域下省份的稳定指标信息
 
             resultData.put("data4","");
-            resultData.put("data5","");
+            resultData.put("data5",getBoRuo(area));
 
 
-
+            resultData.put("data10","");//区域故障信息 散点图 右二
             resultData.put("data11",getYuXiang());
             resultData.put("data12",getTiaoKongBoRuo());
         }
@@ -516,17 +522,16 @@ public class KongJServiceImpl implements KongJService {
             return resultData;
         }
         resultData.put("data0",getIndex());
-        resultData.put("data3",getControlPolice());
+        resultData.put("data3",getControlPolice());//左二
         //获取设备调控策略
         resultData.put("data7",getBaoRuoNumber());
-        resultData.put("data9",getAreaZDandZN(area));
-        resultData.put("data10","");
+        resultData.put("data9","");
+
         return resultData;
     }
     @Override
     public Map<String, Object> getKongJInfo(String message) {
         JSONObject object=JSONObject.parseObject(message);
-        System.out.println(object);
         String type=object.getString("type");
         String area=object.getString("area");
         String JZStatus=object.getString("JZStatus");

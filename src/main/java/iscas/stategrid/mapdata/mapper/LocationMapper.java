@@ -11,7 +11,7 @@ import java.util.Map;
 public interface LocationMapper {
 
     //获得全国的拓扑结构
-    List<Map<String,Object>> selectGlobalTopo();
+    List<Map<String,Object>> selectGlobalTopo(String tableName);
 
     //获得区域的拓扑
     List<Map<String,Object>> selectAreaTopo(String area,String level);
@@ -36,7 +36,7 @@ public interface LocationMapper {
     List<Map<String,Object>> selectCityLocation(String area);
 
     //查询全国拓扑网络中的站点
-    List<Map<String,Object>> selectGlobalTopoLocation(String area);
+    List<Map<String,Object>> selectGlobalTopoLocation(String tableName);
 
     //查询区域拓扑网络中的站点
     List<Map<String,Object>> selectAreaTopoLocation(String area,String level);

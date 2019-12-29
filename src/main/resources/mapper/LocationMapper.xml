@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="iscas.stategrid.mapdata.mapper.LocationMapper">
     <!--获得全国、区域、省、市的拓扑线路-->
-  <select id="selectGlobalTopo" resultType="java.util.Map">
-  select a.Flng,a.Flat,b.Tlng,b.Tlat,a.line_name as name,CEILING(rand()*5) as type from (select dc_line.`from`,dc_line.line_name,st_location.lng as Flng,st_location.lat as Flat from dc_line,st_location where dc_line.`from`=st_location.st_name)a left join (select dc_line.`to`,dc_line.line_name,st_location.lng as Tlng,st_location.lat as Tlat from dc_line,st_location where dc_line.`to`=st_location.st_name) b on a.line_name=b.line_name
+  <select id="selectGlobalTopo" parameterType="java.lang.String" resultType="java.util.Map">
+  select a.Flng,a.Flat,b.Tlng,b.Tlat,a.line_name as name,CEILING(rand()*5) as type from (select m.`from`,m.line_name,st_location.lng as Flng,st_location.lat as Flat from ${tableName} m,st_location where m.`from`=st_location.st_name)a left join (select n.`to`,n.line_name,st_location.lng as Tlng,st_location.lat as Tlat from ${tableName} n,st_location where n.`to`=st_location.st_name) b on a.line_name=b.line_name
   </select>
   <select id="selectAreaTopo"  parameterType="java.lang.String" resultType="java.util.Map">
 select m.`from`,m.line_name as name,m.Flat,m.Flng,n.Tlng,n.Tlat,CEILING(rand()*5) as type from (select x.`from`,x.line_name ,y.lat as Flat,y.lng as Flng from (select * from line_info a  where  a.`level`=#{level} and a.`from` in (select b.st_name from st_location b where b.area=#{area}) and a.`to` in (select b.st_name from st_location b where b.area=#{area})GROUP BY a.`from` ,a.`to` limit 40)x,st_location y where y.st_name=x.`from`) m left join
@@ -35,7 +35,7 @@ select a.id,a.lat,a.lng,a.type from st_location a where a.province=#{area}
 
     <!--获得全国、区域、省、市的拓扑结构中的场站信息-->
   <select id="selectGlobalTopoLocation"  parameterType="java.lang.String" resultType="java.util.Map">
- select id,st_name,lng,lat,CEILING(rand()*3)+30 as height,type FROM st_location WHERE st_name in(SELECT `from` FROM dc_line) or st_name in(SELECT `to` FROM dc_line)
+ select id,st_name,lng,lat,CEILING(rand()*3)+30 as height,type FROM st_location WHERE st_name in(SELECT `from` FROM ${tableName}) or st_name in(SELECT `to` FROM ${tableName})
  </select>
   <select id="selectAreaTopoLocation"  parameterType="java.lang.String" resultType="java.util.Map">
 select st_location.id,st_name,lng,lat,type, CEILING(rand()*3)+30 as height from st_location where st_location.st_name in (select n.`from` from (select * from line_info a  where a.`level`=#{level} and a.`from` in (select b.st_name from st_location b where b.area=#{area}) and a.`to` in (select b.st_name from st_location b where b.area=#{area})GROUP BY a.`from` ,a.`to` limit 40)n)
