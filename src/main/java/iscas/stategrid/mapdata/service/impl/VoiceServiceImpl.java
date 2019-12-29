@@ -176,7 +176,15 @@ public class VoiceServiceImpl implements VoiceService {
                 Map<String,String> map = new HashMap<>();
                 map.put("lng",bj_line.get(i).get("Flng"));
                 map.put("lat",bj_line.get(i).get("Flat"));
-                if(!bj_line.get(i).equals(voiceDao.getLocationByName(start_station))||!bj_line.get(i).equals(voiceDao.getLocationByName(end_station))){
+                if(!map.equals(voiceDao.getLocationByName(start_station))&&!map.equals(voiceDao.getLocationByName(end_station))){
+                    bj_point.add(map);
+                }
+            }
+            for (int i = 0; i < bj_line.size(); i++) {
+                Map<String,String> map = new HashMap<>();
+                map.put("lng",bj_line.get(i).get("Tlng"));
+                map.put("lat",bj_line.get(i).get("Tlat"));
+                if(!map.equals(voiceDao.getLocationByName(start_station))&&!map.equals(voiceDao.getLocationByName(end_station))){
                     bj_point.add(map);
                 }
             }
