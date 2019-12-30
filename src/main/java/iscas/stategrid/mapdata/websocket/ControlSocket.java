@@ -125,9 +125,9 @@ public class ControlSocket {
     public void sendMessage(String message) {
         for (ControlSocket socketServer : webSocketSet) {
             try {
-                synchronized (session) {
+                //synchronized (session) {
                 socketServer.session.getBasicRemote().sendText(message);
-                }
+               // }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -193,7 +193,10 @@ public class ControlSocket {
 
                 JSONObject object=JSONObject.parseObject(name);
                 if("2".equals(object.getString("JZStatus"))){
-                    area_info.put("data1", KongJService.getGuZhangBaoJing("2","2"));
+                    String para=object.getString("para");
+                    System.out.println("从语音的接口传过来的数据是:"+name);
+                    area_info.put("data1", KongJService.getGuZhangBaoJing(para,"2"));
+                    area_info.put("data7",KongJService.getBaoRuoNumber("3"));
                 }
 
                 sendMessage(JSON.toJSONString(area_info));

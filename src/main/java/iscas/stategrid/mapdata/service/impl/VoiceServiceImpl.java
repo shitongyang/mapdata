@@ -33,6 +33,9 @@ public class VoiceServiceImpl implements VoiceService {
     private VoiceDao voiceDao;
     @Autowired
     private MapTopoWebSocket mapTopoWebSocket;
+
+    @Autowired
+    private ControlSocket controlSocket;
     @Autowired
     private LocationMapper stLocationEntityMapper;
     @Autowired
@@ -219,6 +222,15 @@ public class VoiceServiceImpl implements VoiceService {
             message_map.put("nameInfo",nameInfo);
             String message_json = JSON.toJSONString(message_map);
             mapTopoWebSocket.onMessage(message_json);
+
+            Map<String,String> kongJianMap =new HashMap<>();
+            //为了改变华中区域的报警信息
+            kongJianMap.put("type","2");
+            kongJianMap.put("area","华中");
+            kongJianMap.put("JZStatus","2");
+            kongJianMap.put("para","2");
+            controlSocket.onMessage(JSON.toJSONString(kongJianMap));
+
             voice_map.put("type","2");
             voice_map.put("voice",url+"第"+parameter+"类故障设置成功");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
@@ -343,6 +355,14 @@ public class VoiceServiceImpl implements VoiceService {
             voice_map.put("voice",url+"风速已提高");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             message = "success";
+        }
+        else if("0Q".equals(commandType)){
+            //将模拟态 区域(华中)的报警信息从故障态切换回无故障态
+            Map<String,Object> message_map = new HashMap<>();
+            message_map.put("area","华中");
+            message_map.put("JZStatus","1");
+            message_map.put("type","2");
+            controlSocket.onMessage(JSON.toJSONString(message_map));
         }
         return message;
     }

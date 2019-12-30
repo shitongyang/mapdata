@@ -82,5 +82,7 @@ List<Map<String,Object>> getAreaZDandZN(String area);
 List<Map<String,Object>> getGuZhangBaoJing(String para,String status);
 //获取模拟态区域 插入故障后的报警信息
  //status表示有无故障  para表示故障类型
+
+Map<String, Object> getBaoRuoNumber(String status);
 }
 

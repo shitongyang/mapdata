@@ -299,6 +299,8 @@ public class KongJServiceImpl implements KongJService {
             Map<String,Object> map = new HashMap<>();
             map.put("message",df.format(new Date())+" "+list.get(i).get("info"));
             map.put("type", list.get(i).get("level"));
+            String level=list.get(i).get("level").toString();
+            map.put("dLevel",StaticResource.levelMap.get(level));
             resultList.add(map);
         }
         return resultList;
@@ -373,12 +375,40 @@ public class KongJServiceImpl implements KongJService {
 
         return list;
     }
-    public Map<String, Object> getBaoRuoNumber(){
+@Override
+    public Map<String, Object> getBaoRuoNumber(String status){
         //获取各个薄弱节点的数量
         Map<String,Object> map = new HashMap<>();
-        map.put("number1",1);
-        map.put("number2",4);
-        map.put("number3",1);
+        if("1".equals(status)){
+            map.put("number1",1);
+            map.put("number2",4);
+            map.put("number3",1);
+        }
+        else if("2".equals(status)){
+            map.put("number1",0);
+            map.put("number2",0);
+            map.put("number3",0);
+        }
+        else if("3".equals(status)){
+            List<Map<String, Object>> list= kongJianMapper.getBaoJing("2","2");
+            int h=0;
+            int m=0;
+            int l=0;
+            for(int i=0;i<list.size();i++){
+                if(list.get(i).get("level").toString().equals("高风险")){
+                    h++;
+                }
+                else if(list.get(i).get("level").toString().equals("一般风险")){
+                    m++;
+                }
+                else if(list.get(i).get("level").toString().equals("低风险")){
+                    l++;
+                }
+            }
+            map.put("number1",h);
+            map.put("number2",m);
+            map.put("number3",l);
+        }
         //最薄弱
         return map;
     }
@@ -460,7 +490,7 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data4",getAreaInfo());//获取六大区域的震荡频率和阻尼比
             resultData.put("data5",getBoRuo(area));//获取薄弱点信息
 
-            resultData.put("data7",getBaoRuoNumber());//获取薄弱节点各个的数量
+            resultData.put("data7",getBaoRuoNumber("1"));//获取薄弱节点各个的数量
             resultData.put("data9","");
         }
         else if(StaticResource.AREA_Set.contains(area)){
@@ -494,7 +524,7 @@ public class KongJServiceImpl implements KongJService {
         resultData.put("data0",getIndex()); //获取仪表盘信息
         resultData.put("data3",getControlPolice());//获取设备调控策略公用的
 
-        resultData.put("data7",getBaoRuoNumber());
+        resultData.put("data7",getBaoRuoNumber("1"));
         resultData.put("data11","");
         resultData.put("data10","");
         resultData.put("data12","");
@@ -506,20 +536,22 @@ public class KongJServiceImpl implements KongJService {
         //模拟态
         Map<String,Object> resultData =new HashMap<>();
         if("全国".equals(area)){
-            resultData.put("data1",getBaoJing(area,"1"));//获取报警信息 左三
+            resultData.put("data1",getBaoJing(area,"2"));//获取报警信息 左三
             resultData.put("data2",getImIndex("全国","1"));//获取稳定指标信息
 
             resultData.put("data4","");
             resultData.put("data5",getBoRuo(area));//获取薄弱点信息//左一
+            resultData.put("data7",getBaoRuoNumber("1"));
             resultData.put("data11","");
             resultData.put("data12","");
         }
         else if(StaticResource.AREA_Set.contains(area)){
-            resultData.put("data1",getGuZhangBaoJing("2","2"));//获取报警信息
+            resultData.put("data1",getGuZhangBaoJing("2","1"));//获取报警信息
             resultData.put("data2",getImIndex(area,"1"));//获取区域下省份的稳定指标信息
 
-            resultData.put("data4","");
+            resultData.put("data4","模拟态区域");
             resultData.put("data5",getBoRuo(area));
+            resultData.put("data7",getBaoRuoNumber("2"));
             resultData.put("data11",getYuXiang());
             resultData.put("data12",getTiaoKongBoRuo());
         }
@@ -531,7 +563,7 @@ public class KongJServiceImpl implements KongJService {
         resultData.put("data0",getIndex());
         resultData.put("data3",getControlPolice());
         //获取设备调控策略
-        resultData.put("data7",getBaoRuoNumber());
+
         resultData.put("data9","");
         resultData.put("data10","");//区域故障信息 散点图 右二 在controlSocket里写了
         return resultData;

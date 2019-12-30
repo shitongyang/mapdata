@@ -349,6 +349,14 @@ public class StaticResource {
         map.put("你输入的参数是:",area);
         return map;
     }
+    public static final Map<String,String> levelMap=new HashMap(){
+        {
+           put("高风险","1");
+           put("一般风险","2");
+           put("低风险","3");
+           put("无风险","0");
+        }
+    };
     public static void main(String[] args) {
         System.out.println(PROVINCE_Set);
     }
