@@ -2,7 +2,6 @@ package iscas.stategrid.mapdata.cron;
 
 
 import com.alibaba.fastjson.JSON;
-import iscas.stategrid.mapdata.mapper.VoiceDao;
 import iscas.stategrid.mapdata.mapper.WinPositionDao;
 import iscas.stategrid.mapdata.websocket.ModelSocket;
 import org.springframework.beans.factory.annotation.Autowired;

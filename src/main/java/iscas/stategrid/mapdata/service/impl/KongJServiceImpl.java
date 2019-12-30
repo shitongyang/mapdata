@@ -28,23 +28,23 @@ public class KongJServiceImpl implements KongJService {
     /*
      * 安全性指标
      * */
-    private int index_1 = 0;
+    private String index_1 = "0";
     /*
      * 经济型指标
      * */
-    private int index_2 = 0;
+    private String index_2 = "0";
     /*
      * 综合指标
      * */
-    private int index_3 = 0;
+    private String index_3 = "0";
     /*
      * 静态安全分析指标
      * */
-    private int index_4 = 0;
+    private String index_4 = "0";
     /*
      * 暂态安全分析指标
      * */
-    private int index_5 = 0;
+    private String index_5 = "0";
     /*
     * 薄弱节点id
     * */
@@ -60,7 +60,6 @@ public class KongJServiceImpl implements KongJService {
     @Autowired
     private KongJianMapper kongJianMapper;
 
-
     @Override
     public List<String> getErrorInfo() {
         List<String> info = new ArrayList<>();
@@ -73,33 +72,23 @@ public class KongJServiceImpl implements KongJService {
         }
         return info;
     }
-
     @Override
     public Map<String, String> getIndex() {
         Map<String, String> info = new HashMap<>();
         RedisClient redisClient = new RedisClient();
-        index_1 = Integer.parseInt(redisClient.getValue("index1"));
-        index_2 = Integer.parseInt(redisClient.getValue("index2"));
-        index_3 = Integer.parseInt(redisClient.getValue("index3"));
-        index_4 = Integer.parseInt(redisClient.getValue("index4"));
-        index_5 = Integer.parseInt(redisClient.getValue("index4"));
-//        Calendar calendar=Calendar.getInstance();
-//        int currentMinute=calendar.get(calendar.MINUTE);
-//        index_1 = (int) (Math.random() * (85 - 30) + 30);
-//        index_2 = (int) (Math.random() * (85 - 30) + 30);
-//        index_3 = (int) (Math.random() * (85 - 30) + 30);
-//        index_4 = (int) (Math.random() * (85 - 30) + 30);
-//        index_5 = (int) (Math.random() * (85 - 30) + 30);
-//        index_1 = (currentMinute+30)%80;
-//        index_2 = (currentMinute+35)%80;
-//        index_3 = (currentMinute+40)%80;
-//        index_4 = (currentMinute+50)%80;
-//        index_5 = (currentMinute+55)%80;
-        info.put("index_1", String.valueOf(index_1));
-        info.put("index_2", String.valueOf(index_2));
-        info.put("index_3", String.valueOf(index_3));
-        info.put("index_4", String.valueOf(index_4));
-        info.put("index_5", String.valueOf(index_5));
+        index_1 = redisClient.getValue("index1");
+        index_2 = redisClient.getValue("index2");
+        index_3 = redisClient.getValue("index3");
+        index_4 = redisClient.getValue("index4");
+        index_5 = redisClient.getValue("index0");
+        info.put("index_1", index_1);
+        info.put("index_2", index_2);
+        info.put("index_3", index_3);
+        info.put("index_4", index_4);
+        info.put("index_5", index_5);
+        if(info.get("index_1") == null){
+            System.out.println("仪表盘发生错误");
+        }
         return info;
     }
     @Override
