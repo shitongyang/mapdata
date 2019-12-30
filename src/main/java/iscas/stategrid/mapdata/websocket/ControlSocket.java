@@ -190,6 +190,12 @@ public class ControlSocket {
                 Map<String,Object> area_info = KongJService.getKongJInfo(name);
                 area_info.put("data6",data6);
                 area_info.put("data10",sanDianMap());
+
+                JSONObject object=JSONObject.parseObject(name);
+                if("2".equals(object.getString("JZStatus"))){
+                    area_info.put("data1", KongJService.getGuZhangBaoJing("2","2"));
+                }
+
                 sendMessage(JSON.toJSONString(area_info));
                 try {
                     Thread.sleep(8000);

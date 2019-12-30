@@ -15,7 +15,10 @@ import java.util.Map;
 @Mapper
 @Component
 public interface KongJianMapper {
-    public List<Map<String,Object>> getBoRuo(String area);
+     List<Map<String,Object>> getBoRuo(String area);
     //获取薄弱点裕度
-    public List<Map<String,Object>> getDevicePolice();
+     List<Map<String,Object>> getDevicePolice();
+
+     //获取模拟态区域报警信息
+     List<Map<String,Object>> getBaoJing(String para,String status);
 }

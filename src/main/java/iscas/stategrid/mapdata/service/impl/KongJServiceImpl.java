@@ -288,6 +288,22 @@ public class KongJServiceImpl implements KongJService {
         }
         return list;
     }
+
+    @Override
+    public List<Map<String, Object>> getGuZhangBaoJing(String para, String status) {
+        List<Map<String, Object>> list= kongJianMapper.getBaoJing(para,status);
+        List <Map<String, Object>> resultList=new ArrayList<>();
+        int length=(list==null?0:list.size());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        for(int i=0;i<length;i++){
+            Map<String,Object> map = new HashMap<>();
+            map.put("message",df.format(new Date())+" "+list.get(i).get("info"));
+            map.put("type", list.get(i).get("level"));
+            resultList.add(map);
+        }
+        return resultList;
+    }
+
     public List<Map<String,Object>> getWeather(List<String> list){
         List<Map<String,Object>> resultList = new ArrayList<>();
         Nformat.setMaximumFractionDigits(2);
@@ -499,7 +515,7 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data12","");
         }
         else if(StaticResource.AREA_Set.contains(area)){
-            resultData.put("data1",getBaoJing(area,"1"));//获取报警信息
+            resultData.put("data1",getGuZhangBaoJing("2","2"));//获取报警信息
             resultData.put("data2",getImIndex(area,"1"));//获取区域下省份的稳定指标信息
 
             resultData.put("data4","");
