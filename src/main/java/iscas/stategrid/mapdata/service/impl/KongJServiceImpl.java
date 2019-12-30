@@ -294,7 +294,7 @@ public class KongJServiceImpl implements KongJService {
         List<Map<String, Object>> list= kongJianMapper.getBaoJing(para,status);
         List <Map<String, Object>> resultList=new ArrayList<>();
         int length=(list==null?0:list.size());
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         for(int i=0;i<length;i++){
             Map<String,Object> map = new HashMap<>();
             map.put("message",df.format(new Date())+" "+list.get(i).get("info"));
@@ -324,17 +324,13 @@ public class KongJServiceImpl implements KongJService {
         return resultList;
     }
 
-    public List<Map<String, Object>> getBaoJing(String area,String isStatic){
+    public List<Map<String, Object>> getBaoJing(String area){
         //获取报警信息
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         List<Map<String,Object>> list1 = kongJianMapper.getBoRuo(area);
         List<Map<String,Object>> list = new ArrayList<>();
         for(int i=0;i<list1.size();i++){
             double police = Double.parseDouble(list1.get(i).get("before").toString());
-            if("2".equals(isStatic)){
-                police=((int) (Math.random() * (6 -4 ) + 4)) * 0.1;
-                //暂态时的指标
-            }
             Nformat.setMaximumFractionDigits(2);
             String str=Nformat.format(police);
             //取两位小数
@@ -342,32 +338,15 @@ public class KongJServiceImpl implements KongJService {
             map.put("message",df.format(new Date())+" "+list1.get(i).get("name")+" " +str);
             int length=list1.size()-1;
             if(i!=0&&i!=length) {
-                if("2".equals(isStatic)){
-                    map.put("type", "一般风险");
-                }
-                else{
-                    map.put("type", "薄弱");
-                }
+                map.put("type", "一般风险");
                 map.put("dLevel","2");
             }
             else if(i==0){
-                if("2".equals(isStatic)){
-                    map.put("type", "高风险");
-                }
-                else{
-                    map.put("type", "最薄弱");
-                }
-
+                map.put("type", "高风险");
                 map.put("dLevel","1");
             }
             else if(i==length) {
-                if("2".equals(isStatic)){
                     map.put("type", "低风险");
-                }
-                else
-                {
-                    map.put("type", "较薄弱");
-                }
                 map.put("dLevel","3");
             }
             list.add(map);
@@ -484,7 +463,7 @@ public class KongJServiceImpl implements KongJService {
         Map<String,Object> resultData =new HashMap<>();
         //获取五个仪表盘的数据
         if("全国".equals(area)){
-            resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
+            resultData.put("data1",getBaoJing(area));//获取报警信息
             resultData.put("data2",getImIndex("全国",isStatic));//获取稳定指标信息
 
             resultData.put("data4",getAreaInfo());//获取六大区域的震荡频率和阻尼比
@@ -494,21 +473,21 @@ public class KongJServiceImpl implements KongJService {
             resultData.put("data9","");
         }
         else if(StaticResource.AREA_Set.contains(area)){
-            resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
+            resultData.put("data1",getBaoJing(area));//获取报警信息
             resultData.put("data2",getImIndex(area,isStatic));//获取区域下省份的稳定指标信息
             resultData.put("data4","");
             resultData.put("data5",getBoRuo(area));
             resultData.put("data9",getAreaZDandZN(area));//获取模式，震荡频率，阻尼比
         }
         else if(StaticResource.PROVINCE_Set.contains(area)){
-            resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
+            resultData.put("data1",getBaoJing(area));//获取报警信息
             resultData.put("data2",getImIndex(area,isStatic));//获取区域下省份的稳定指标信息
             resultData.put("data4","");
             resultData.put("data5",getBoRuo(area));
             resultData.put("data9",getAreaZDandZN(area));//获取模式，震荡频率，阻尼比
         }
         else if(StaticResource.CITY_SET.contains(area)){
-            resultData.put("data1",getBaoJing(area,isStatic));//获取报警信息
+            resultData.put("data1",getBaoJing(area));//获取报警信息
             resultData.put("data2",getImIndex("哈尔滨市",isStatic));//获取区域下省份的稳定指标信息
 
             resultData.put("data4","");
@@ -536,7 +515,7 @@ public class KongJServiceImpl implements KongJService {
         //模拟态
         Map<String,Object> resultData =new HashMap<>();
         if("全国".equals(area)){
-            resultData.put("data1",getBaoJing(area,"2"));//获取报警信息 左三
+            resultData.put("data1",getBaoJing(area));//获取报警信息 左三
             resultData.put("data2",getImIndex("全国","1"));//获取稳定指标信息
 
             resultData.put("data4","");
