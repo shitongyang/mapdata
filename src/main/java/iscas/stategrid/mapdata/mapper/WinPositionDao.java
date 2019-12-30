@@ -17,4 +17,5 @@ public interface WinPositionDao {
     Map<String,String> getWinLocation(String id);
     List<Map<String,String>> getWinLine();
     List<Map<String,String>> getWind(String time);
+    List<String> getWindName();
 }

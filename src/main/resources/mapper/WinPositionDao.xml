@@ -19,6 +19,9 @@
     <select id="getWind" resultType="java.util.Map">
         SELECT lng,lat,id,`group` FROM wind,wind_group WHERE time = #{time} AND member LIKE concat('%',id,'%')
     </select>
+    <select id="getWindName" resultType="java.lang.String">
+        SELECT `name` FROM windfarm
+    </select>
 
 
 </mapper>

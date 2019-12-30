@@ -1,5 +1,6 @@
 package iscas.stategrid.mapdata.service.impl;
 import com.alibaba.fastjson.JSONObject;
+import iscas.stategrid.mapdata.Utils.RedisClient;
 import iscas.stategrid.mapdata.mapper.KongJianMapper;
 import iscas.stategrid.mapdata.service.KongJService;
 import iscas.stategrid.mapdata.mapper.LocationMapper;
@@ -76,18 +77,24 @@ public class KongJServiceImpl implements KongJService {
     @Override
     public Map<String, String> getIndex() {
         Map<String, String> info = new HashMap<>();
-        Calendar calendar=Calendar.getInstance();
-        int currentMinute=calendar.get(calendar.MINUTE);
+        RedisClient redisClient = new RedisClient();
+        index_1 = Integer.parseInt(redisClient.getValue("index1"));
+        index_2 = Integer.parseInt(redisClient.getValue("index2"));
+        index_3 = Integer.parseInt(redisClient.getValue("index3"));
+        index_4 = Integer.parseInt(redisClient.getValue("index4"));
+        index_5 = Integer.parseInt(redisClient.getValue("index4"));
+//        Calendar calendar=Calendar.getInstance();
+//        int currentMinute=calendar.get(calendar.MINUTE);
 //        index_1 = (int) (Math.random() * (85 - 30) + 30);
 //        index_2 = (int) (Math.random() * (85 - 30) + 30);
 //        index_3 = (int) (Math.random() * (85 - 30) + 30);
 //        index_4 = (int) (Math.random() * (85 - 30) + 30);
 //        index_5 = (int) (Math.random() * (85 - 30) + 30);
-        index_1 = (currentMinute+30)%80;
-        index_2 = (currentMinute+35)%80;
-        index_3 = (currentMinute+40)%80;
-        index_4 = (currentMinute+50)%80;
-        index_5 = (currentMinute+55)%80;
+//        index_1 = (currentMinute+30)%80;
+//        index_2 = (currentMinute+35)%80;
+//        index_3 = (currentMinute+40)%80;
+//        index_4 = (currentMinute+50)%80;
+//        index_5 = (currentMinute+55)%80;
         info.put("index_1", String.valueOf(index_1));
         info.put("index_2", String.valueOf(index_2));
         info.put("index_3", String.valueOf(index_3));
@@ -287,10 +294,9 @@ public class KongJServiceImpl implements KongJService {
         }
 
         count = count+1;
-        if(count>3)
+        if(count>3){
             count=1;
-
-
+        }
         return list;
     }
     public List<Map<String,Object>> getWeather(List<String> list){

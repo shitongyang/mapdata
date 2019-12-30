@@ -2,6 +2,8 @@ package iscas.stategrid.mapdata.cron;
 
 
 import com.alibaba.fastjson.JSON;
+import iscas.stategrid.mapdata.mapper.VoiceDao;
+import iscas.stategrid.mapdata.mapper.WinPositionDao;
 import iscas.stategrid.mapdata.websocket.ModelSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -23,25 +25,27 @@ import java.util.*;
 public class ModelSchedule implements SchedulingConfigurer {
     @Autowired
     private ModelSocket modelSocket;
+    @Autowired
+    private WinPositionDao winPositionDao;
     @Scheduled(fixedRate=1000)
     public void doThing(){
         List<Map<String,String>> info = new ArrayList<>();
-        String name = "风电机组";
-        for (int i = 0; i <20; i++) {
+        List<String> WindName = winPositionDao.getWindName();
+        for (int i = 0; i <WindName.size(); i++) {
             Map<String,String> map = new HashMap<>();
-            map.put("name",name+String.valueOf(i+1));
-            int u = (int) (Math.random() * (20000 - 500) + 500);
+            map.put("name",WindName.get(i));
+            int w = (int) (Math.random() * (20000 - 500) + 500);
             double p = (int) (Math.random() * (800 - 200) + 200)*0.1;
             double q = (int) (Math.random() * (200 - 10) + 10)*0.01;
             NumberFormat Nformat = NumberFormat.getInstance();
             // 设置小数位数。
             Nformat.setMaximumFractionDigits(2);
             if(i%2==0){
-                map.put("W",String.valueOf(295070-u));
+                map.put("W",String.valueOf(295070-w));
                 map.put("P",Nformat.format(366.101-p));
                 map.put("Q","-"+Nformat.format(5.86096-q));
             }else {
-                map.put("W",String.valueOf(295070+u));
+                map.put("W",String.valueOf(295070+w));
                 map.put("P",Nformat.format(366.101+p));
                 map.put("Q","-"+Nformat.format(5.86096+q));
             }
