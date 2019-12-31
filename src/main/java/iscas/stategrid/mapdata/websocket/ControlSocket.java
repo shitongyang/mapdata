@@ -180,18 +180,22 @@ public class ControlSocket {
         {
             while(isRun) {
                 System.out.println("在控件_run方法中进来的参数是:" + name);
+                JSONObject object=JSONObject.parseObject(name);
                 List<Map<String, Object>> topo_Line_info = mapService.getTopoLine(name);
+
+                List<Map<String, String>> weak_info = mapService.getWeakLocation(object.getString("area"));
                 Map<String,Object> data6=new HashMap<>();
                 //
                 data6.put("left1",topo_Line_info.size());
                 data6.put("left2",(int)(Math.random()*10)+20);
-                data6.put("right1",(int)(Math.random()*2)+5);
+
+                data6.put("right1",weak_info.size());
                 data6.put("right2",(int)(Math.random()*8)+1+"h");
                 Map<String,Object> area_info = KongJService.getKongJInfo(name);
                 area_info.put("data6",data6);
                 area_info.put("data10",sanDianMap());
 
-                JSONObject object=JSONObject.parseObject(name);
+
                 if("2".equals(object.getString("JZStatus"))){
                     String para=object.getString("para");
                     System.out.println("从语音的接口传过来的数据是:"+name);
