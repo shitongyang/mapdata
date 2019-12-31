@@ -33,18 +33,18 @@ public class ModelSchedule implements SchedulingConfigurer {
         for (int i = 0; i <WindName.size(); i++) {
             Map<String,String> map = new HashMap<>();
             map.put("name",WindName.get(i));
-            int w = (int) (Math.random() * (20000 - 500) + 500);
+            int w = (int) (Math.random() * (20 - 5) + 5);
             double p = (int) (Math.random() * (800 - 200) + 200)*0.1;
             double q = (int) (Math.random() * (200 - 10) + 10)*0.01;
             NumberFormat Nformat = NumberFormat.getInstance();
             // 设置小数位数。
             Nformat.setMaximumFractionDigits(2);
             if(i%2==0){
-                map.put("W",String.valueOf(295070-w));
+                map.put("W",String.valueOf(62.9-w));
                 map.put("P",Nformat.format(366.101-p));
                 map.put("Q","-"+Nformat.format(5.86096-q));
             }else {
-                map.put("W",String.valueOf(295070+w));
+                map.put("W",String.valueOf(31.4+w));
                 map.put("P",Nformat.format(366.101+p));
                 map.put("Q","-"+Nformat.format(5.86096+q));
             }

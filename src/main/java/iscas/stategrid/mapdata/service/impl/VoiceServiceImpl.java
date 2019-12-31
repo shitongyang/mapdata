@@ -340,14 +340,14 @@ public class VoiceServiceImpl implements VoiceService {
             message_map.put("vlevel","");
             mapTopoWebSocket.onMessage(JSON.toJSONString(message_map));
             voice_map.put("type","2");
-            voice_map.put("voice",url+"已为您展示潮流数据");
+            voice_map.put("voice",url+"推演结束");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             message = "success";
         }else if("0E".equals(commandType)){
             //降低风速
             voice_map.put("type","5");
             voice_map.put("value","2");
-            voice_map.put("voice",url+"风速已降低");
+            voice_map.put("voice",url+"风速已降低，此时等值台数由四台变成三台");
             voiceSocket.sendMessage(JSON.toJSONString(voice_map));
             message = "success";
         }else if("0F".equals(commandType)){

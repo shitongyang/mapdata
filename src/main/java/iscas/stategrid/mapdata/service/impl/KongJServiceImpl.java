@@ -403,7 +403,6 @@ public class KongJServiceImpl implements KongJService {
             map.put("number",Nformat.format(police));
             list.add(map);
         }
-
         return list;
     }
     public List<Map<String,Object>> getYuXiang()
